@@ -15,7 +15,6 @@ echo -e "${LBLUE}Setting Master host name ===> $master_host_name${WHITE}"
 sudo hostnamectl set-hostname $master_host_name
 
 echo -e "${LBLUE}Processing data from input JSON config file...${WHITE}"
-# list of hosts IP that will join the cluster
 export android_app_ready=$(yq '.android_app_ready' $config_file_path)
 export app_run_on_vpn=$(yq '.app_run_on_vpn' $config_file_path)
 export kubernetes_version=$(yq '.kubernetes_version' $config_file_path)
@@ -40,6 +39,7 @@ export docker_access_token=$(yq '.docker_access_token' $config_file_path)
 export server_replica_count=$(yq '.server_replica_count' $config_file_path)
 #exporting host list as a string (so it can be exported as variable and read by other scripts)
 export host_list="$(yq '.hosts[]' $config_file_path)"
+export application_repositories="$(yq '.application_repositories[]' $config_file_path)"
 
 export app_server_addr=$load_balancer_dns_name
 
@@ -80,6 +80,7 @@ export master_host_ip=$master_host_ip
 export master_host_name=$master_host_name
 export hosts="${hosts[@]}"
 export host_list="${hosts[@]}"
+export application_repositories="${application_repositories[@]}"
 export environment=$environment
 export load_balancer_public_ip=$load_balancer_public_ip
 export load_balancer_dns_name=$load_balancer_dns_name
