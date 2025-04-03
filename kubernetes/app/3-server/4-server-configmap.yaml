@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-configmap
+  namespace: binance-b
+data:
+  JOB_IMAGE_NAME: $docker_username/${docker_server_repository_name}_job
+  NODE_ENV: develop
+  TESTNET_BASE_URL: https://testnet.binance.vision/
+  TESTNET_WEBSOCKET_BASE_URL: wss://testnet.binance.vision:9443
+  BINANCE_BASE_URL: https://api.binance.com
+  BINANCE_WEBSOCKET_BASE_URL: wss://stream.binance.com:9443
+  ACCESS_TOKEN_LIFETIME: '$server_access_token_lifetime'
+  REFRESH_TOKEN_LIFETIME: '$server_refresh_token_lifetime'
+  SERVER_PORT: '3000'
+  MONGODB_DB_NAME: binanceB

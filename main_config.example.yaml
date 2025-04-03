@@ -1,0 +1,37 @@
+---
+# infrastructure info:
+noip_username: 'noip_username' # set to '' to not use noip for ddns for the load_balancer_dns_name
+noip_password: 'noip_password' # set to '' to not use noip for ddns for the load_balancer_dns_name
+android_app_ready: 'true' # set to true to support the building of android app (in capacitor.config.json insert the ${master_host_VPN_ip} as for ex: 10.11.1.1 and not the dns name). The app will be reachable at that IP (10.11.1.1)
+app_run_on_vpn: 'false' # set to true if you want app to work behind a vpn. Set to false if you want to use https protocol. IMPORTANT: even if you set false, variables for vpn configuration are needed.
+application_dns_name: 'binanceb.com' # this will be the dns to reach the entire cluster from the vpn
+load_balancer_dns_name: 'cluster.ddns.com' # public dns name where main server is reachable. For a "domestic" use, adopt a free DDNS service (see no-ip.com website) to set this name, in this case set the public ddns from no-ip
+load_balancer_public_ip: '2.42.42.133' # this is the cluster public IP (your load balancer public IP)
+# For each of the following hosts must be provided: host_username@internal_ip_address@desired_vpn_ip
+master_host: 'm1@192.168.1.200@10.11.1.1' # kubernetes master host IP from which everything is executed: provide it from internal interface (192.168...)
+hosts: # list of ONLY worker and other control plane nodes: made in the form of: USERNAME@IP_ADDRESS
+- 'm1@192.168.1.201@10.11.1.2' # hosts starting with 'm' will be considered as control plane nodes
+- 'w2@192.168.1.202@10.11.1.3' # hosts starting with 'w' will be considered as worker nodes
+vm_cpu_count: '2' # Virtual machine's cpu number
+vm_min_ram: '2GB' # Virtual machine's minimum amount of RAM
+vm_max_ram: '4GB' # Virtual machine's maximum amount of RAM
+github_branch_name: 'develop' # the branch to pull the code from
+oscdimg_path: 'C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe' # You must provide the oscdimg.exe path. https://learn.microsoft.com/it-it/windows-hardware/get-started/adk-install . Oscdimg is used to write the CIDATA image (containing meta-data and user-data files) for cloud init as a ISO 9660 image
+qemuimg_path: 'E:\Download\qemu-img\qemu-img.exe' # http://www.cloudbase.it/qemu-img-windows/. Quemu is used to convert ubuntu cloud-image to a virtual hard drive to be used by virtual machines
+vm_store_path: 'F:\VM' # the path where all the virtual machines will be stored
+os_image_path: 'E:\Desktop\torrent downloads\SO\focal-server-cloudimg-amd64.img' # the operating system path to be installed on all virtual machines. You must pick up a cloud-image, cloud-init configuration won't work otherwise
+kubernetes_version: '1.30'
+docker_username: 'docker_username' # used to build and push docker images to repository
+docker_access_token: 'your_docker_access_token' # used to build and push docker images to repository. To not confuse with password
+docker_server_repository_name: 'binanceb_nodejs_server' # used to push docker server image from repository and pull by kubernetes
+docker_client_repository_name: 'binanceb_vuejs_client' # used to push docker client image from repository and pull by kubernetes
+# application config parameters:
+environment: 'dev' # this will cause application to log less info instead of 'dev' option
+server_replica_count: '2'
+server_access_token_secret: 'server_access_token_secret'
+server_refresh_token_secret: 'server_refresh_token_secret'
+server_access_token_lifetime: '360' # IN MINUTES. Access token time where user is kept logged in (360 minutes)
+server_refresh_token_lifetime: '1440' # IN MINUTES. Refresh token time where used when access token expires, to generate a new one (1440 minutes)
+mongodb_replica_count: '1' # set to 1. More than one replica not working for now 'cause multiple fisical hosts would be needed in order to use a different load balancer ip address for each replica
+mongo_root_username: 'mongorootusername'
+mongo_root_password: 'mongorootpassword'

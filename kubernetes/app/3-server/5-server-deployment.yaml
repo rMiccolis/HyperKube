@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: binance-b
+  labels:
+    app: server
+spec:
+  replicas: $server_replica_count
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+      - name: server
+        image: $docker_username/$docker_server_repository_name
+        imagePullPolicy: "Always"
+        resources:
+          limits:
+            memory: 256Mi
+            cpu: 200m
+          requests:
+            memory: 256Mi
+            cpu: 200m
+        ports:
+        - containerPort: 3000
+        env: 
+        - name: MONGODB_USERNAME
+          valueFrom:
+           secretKeyRef:
+             name: server-secret
+             key: MONGO-ROOT-USERNAME
+        - name: MONGODB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: server-secret
+             key: MONGO-ROOT-PASSWORD
+        - name: JOB_IMAGE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: server-configmap
+              key: JOB_IMAGE_NAME
+        - name: MONGODB_DB_NAME
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: MONGODB_DB_NAME
+        - name: MONGODB_URI
+          # value: $(MONGODB_SERVICE_HOST)
+          value: $app_server_addr
+        - name: MONGODB_PORT
+          # value: $(MONGODB_SERVICE_PORT)
+          value: "27017"
+        - name: SERVER_PORT
+          value: '3000'
+        - name: NODE_ENV
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: NODE_ENV
+        - name: TESTNET_BASE_URL
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: TESTNET_BASE_URL
+        - name: TESTNET_WEBSOCKET_BASE_URL
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: TESTNET_WEBSOCKET_BASE_URL
+        - name: BINANCE_BASE_URL
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: BINANCE_BASE_URL
+        - name: BINANCE_WEBSOCKET_BASE_URL
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: BINANCE_WEBSOCKET_BASE_URL
+        - name: ACCESS_TOKEN_SECRET
+          valueFrom:
+           secretKeyRef:
+             name: server-secret
+             key: ACCESS_TOKEN_SECRET
+        - name: REFRESH_TOKEN_SECRET
+          valueFrom:
+           secretKeyRef:
+             name: server-secret
+             key: REFRESH_TOKEN_SECRET
+        - name: ACCESS_TOKEN_LIFETIME
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: ACCESS_TOKEN_LIFETIME
+        - name: REFRESH_TOKEN_LIFETIME
+          valueFrom:
+           configMapKeyRef:
+             name: server-configmap
+             key: REFRESH_TOKEN_LIFETIME
