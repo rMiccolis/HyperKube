@@ -3,23 +3,7 @@
 ###############################################################################
 echo -e "${LBLUE}Reading and processing application settings from input file...${WHITE}"
 
-# Configuring application settings
-export server_access_token_secret=$(echo -n $(yq '.server_access_token_secret' $config_file_path) | base64)
-
-export server_refresh_token_secret=$(echo -n $(yq '.server_refresh_token_secret' $config_file_path) | base64)
-
-export server_access_token_lifetime=$(yq '.server_access_token_lifetime' $config_file_path)
-
-export server_refresh_token_lifetime=$(yq '.server_refresh_token_lifetime' $config_file_path)
-
-export mongo_root_username=$(echo -n $(yq '.mongo_root_username' $config_file_path) | base64)
-
-export mongo_root_password=$(echo -n $(yq '.mongo_root_password' $config_file_path) | base64)
-
-mkdir /home/$USER/temp
-cp -R $repository_root_dir/binanceB/kubernetes/app/* /home/$USER/temp
-
-# function needs a file name parameter to operate the substitution on ${var} variables type
+# function needs a file name parameter to operate the substitution on ${var} and $var variables type
 envsubst_preserve_empty_variables(){
 file_name=$1
 # Step 1: Extracts all variables in the format ${VAR} or $VAR from the file
@@ -46,17 +30,23 @@ done <<< "$vars"
 # Now the $file_name contains only the replaced variables that are defined in the environment
 }
 
-# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-application_repositories=($application_repositories)
-mkdir apps
-cd apps
-for h in "${application_repositories[@]}"; do
-# cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
-git clone $h
-done
-# TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+# Configuring application settings
+export server_access_token_secret=$(echo -n $(yq '.server_access_token_secret' $config_file_path) | base64)
 
-echo -e "${LBLUE}Starting Application...${WHITE}"
+export server_refresh_token_secret=$(echo -n $(yq '.server_refresh_token_secret' $config_file_path) | base64)
+
+export server_access_token_lifetime=$(yq '.server_access_token_lifetime' $config_file_path)
+
+export server_refresh_token_lifetime=$(yq '.server_refresh_token_lifetime' $config_file_path)
+
+export mongo_root_username=$(echo -n $(yq '.mongo_root_username' $config_file_path) | base64)
+
+export mongo_root_password=$(echo -n $(yq '.mongo_root_password' $config_file_path) | base64)
+
+mkdir /home/$USER/temp
+cp -R $repository_root_dir/binanceB/kubernetes/app/* /home/$USER/temp
+
+echo -e "${LBLUE}Starting Mongodb...${WHITE}"
 kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=1800s &
 wait
 kubectl apply -f /home/$USER/temp/1-namespaces/
@@ -111,8 +101,27 @@ while [ "$exit_loop" != "$ready_deployment_condition" ]; do
     echo "Deployment / stateful pod ready: $exit_loop"
 done
 
-kubectl apply -f /home/$USER/temp/3-server/
-kubectl apply -f /home/$USER/temp/4-client/
+echo -e "${LBLUE}Starting applications...${WHITE}"
+# 1) git clone each application provided in main_config.yaml
+# 2) apply envsubst (with envsubst_preserve_empty_variables function) on each .yaml file inside cloned project's kubernetes folder
+# 3) apply those configuration yaml files
+application_repositories=($application_repositories)
+mkdir apps
+cd apps
+app_names=()
+for h in "${application_repositories[@]}"; do
+  # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
+  IFS='/' read -r -a app_names <<< $h
+  app=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
+  echo -e "${LBLUE}Working on $app${WHITE}"
+  git clone $h
+  app_yaml_files=($(ls ./$app/kubernetes/))
+    for file_name in "${app_yaml_files[@]}"; do
+      envsubst_preserve_empty_variables ./$app/kubernetes/$file_name
+    done
+    # apply each configuration yaml file with kubernetes
+    kubectl apply -f ./$app/kubernetes/
+done
 
 # rm -rf /home/$USER/temp
 # rm -rf /home/$USER/main_config.yaml
