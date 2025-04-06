@@ -65,7 +65,8 @@ TO LET THIS SCRIPT WORK, YOU **MUST**:
 Launch generate_hyperv_vms.ps1:
 Input parameter:
 
-- config_file_path => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application (example [HERE](https://github.com/rMiccolis/HyperKube/blob/master/main_config.example.yaml))
+- config_file_path => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application. Example [HERE](https://github.com/rMiccolis/HyperKube/blob/master/main_config.example.yaml)
+- app_yaml_variables_file_path => This is the path to the configuration file and MUST be called "app_yaml_variables_file_path.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order). Example [HERE](https://github.com/rMiccolis/HyperKube/blob/master/app_yaml_variables_file_path.yaml)
 
 ```powershell
 powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -config_file_path "E:\Download\main_config.yaml"
