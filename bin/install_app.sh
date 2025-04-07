@@ -4,6 +4,7 @@
 echo -e "${LBLUE}Reading and processing application settings from input file...${WHITE}"
 
 # function needs a file name parameter to operate the substitution on ${var} and $var variables type
+# REQUIRED ARGUMENT: file_name
 envsubst_preserve_empty_variables(){
 file_name=$1
 # Step 1: Extracts all variables in the format ${VAR} or $VAR from the file
@@ -30,98 +31,92 @@ done <<< "$vars"
 # Now the $file_name contains only the replaced variables that are defined in the environment
 }
 
-# Configuring application settings
-export server_access_token_secret=$(echo -n $(yq '.server_access_token_secret' $config_file_path) | base64)
-
-export server_refresh_token_secret=$(echo -n $(yq '.server_refresh_token_secret' $config_file_path) | base64)
-
-export server_access_token_lifetime=$(yq '.server_access_token_lifetime' $config_file_path)
-
-export server_refresh_token_lifetime=$(yq '.server_refresh_token_lifetime' $config_file_path)
-
-export mongo_root_username=$(echo -n $(yq '.mongo_root_username' $config_file_path) | base64)
-
-export mongo_root_password=$(echo -n $(yq '.mongo_root_password' $config_file_path) | base64)
-
-mkdir /home/$USER/temp
-cp -R $repository_root_dir/binanceB/kubernetes/app/* /home/$USER/temp
-
-echo -e "${LBLUE}Starting Mongodb...${WHITE}"
-kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=1800s &
-wait
-kubectl apply -f /home/$USER/temp/1-namespaces/
-kubectl apply -f /home/$USER/temp/2-mongodb/0-mongodb-namespace.yaml
-kubectl apply -f /home/$USER/temp/2-mongodb/2-mongodb-rbac.yaml
-kubectl apply -f /home/$USER/temp/2-mongodb/3-mongodb-secrets.yaml
-kubectl apply -f /home/$USER/temp/2-mongodb/4-mongodb-pv.yaml
-kubectl apply -f /home/$USER/temp/2-mongodb/5-mongodb-pvc.yaml
-
-# create statefulset if mongodb replicas are more than 1
-# instructions for statefulset mongodb
-# if [ "$mongodb_replica_count" != "1" ]; then
-#     kubectl apply -f /home/$USER/temp/2-mongodb/1-mongodb-headless_service.yaml
-#     kubectl apply -f /home/$USER/temp/2-mongodb/6-mongodb-statefulset.yaml
-#     # let's wait for mongodb stateful set to be ready
-#     exit_loop=""
-#     ready_sts_condition="$mongodb_replica_count/$mongodb_replica_count"
-#     while [ "$exit_loop" != "$ready_sts_condition" ]; do
-#         sleep 10
-#         exit_loop=$(kubectl get sts -n mongodb | awk 'NR==2{print $2}')
-#         echo "StatefulSet pod ready: $exit_loop"
-#     done
-#     echo -e "${LBLUE}Configuring Mongodb statefulset...${WHITE}"
-#     # when all mongodb replicas are created, let's setup the replicaset
-#     members=()
-#     for i in $(seq $mongodb_replica_count); do
-#         replica_index="$(($i-1))"
-#         if [ "$i" != "$mongodb_replica_count" ]; then
-#             member_str="{ _id: $replica_index, host : '"mongodb-replica-$replica_index.mongodb:27017"' },"
-#         else
-#             member_str="{ _id: $replica_index, host : '"mongodb-replica-$replica_index.mongodb:27017"' }"
-#         fi
-#         members+=($member_str)
-#     done
-#     initiate_command="rs.initiate({ _id: 'rs0',version: 1,members: [ ${members[@]} ] })"
-#     kubectl exec -n mongodb mongodb-replica-0 -- mongosh --eval "$initiate_command"
-
-#     echo -e "${LBLUE}EXECUTED: kubectl exec -n mongodb mongodb-replica-0 -- mongosh --eval '$initiate_command' ${WHITE}"
-
-#     kubectl exec -n mongodb mongodb-replica-0 -- mongosh --eval "rs.status()"
-# fi
-
-kubectl apply -f /home/$USER/temp/2-mongodb/1-mongodb-service.yaml
-kubectl apply -f /home/$USER/temp/2-mongodb/6-mongodb-deployment.yaml
-
-# let's wait for mongodb deployment / stateful set to be ready
-exit_loop=""
-ready_deployment_condition="$mongodb_replica_count/$mongodb_replica_count"
-while [ "$exit_loop" != "$ready_deployment_condition" ]; do
-    sleep 10
-    exit_loop=$(kubectl get deployment  -n mongodb mongodb | awk 'NR==2{print $2}')
-    echo "Deployment / stateful pod ready: $exit_loop"
-done
-
-echo -e "${LBLUE}Starting applications...${WHITE}"
-# 1) git clone each application provided in main_config.yaml
-# 2) apply envsubst (with envsubst_preserve_empty_variables function) on each .yaml file inside cloned project's kubernetes folder
-# 3) apply those configuration yaml files
-application_repositories=($application_repositories)
-mkdir apps
-cd apps
-app_names=()
-for h in "${application_repositories[@]}"; do
+# Function to start app.
+# REQUIRED ARGUMENT: github_repo link
+#   1) git clone each application provided in main_config.yaml
+#   2) apply envsubst (with envsubst_preserve_empty_variables function) on each .yaml file inside cloned project's kubernetes folder
+#   3) apply those configuration yaml files
+start_app(){
+  project_repository=$1
+  mkdir apps
+  cd apps
+  app_names=()
   # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
-  IFS='/' read -r -a app_names <<< $h
-  app=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
-  echo -e "${LBLUE}Working on $app${WHITE}"
-  git clone $h
-  app_yaml_files=($(ls ./$app/kubernetes/))
-    for file_name in "${app_yaml_files[@]}"; do
-      envsubst_preserve_empty_variables ./$app/kubernetes/$file_name
-    done
-    # apply each configuration yaml file with kubernetes
-    kubectl apply -f ./$app/kubernetes/
+  IFS='/' read -r -a app_names <<< $project_repository
+  project_name=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
+  echo -e "${LBLUE}Starting $project_name${WHITE}"
+  git clone $project_repository
+  app_yaml_files=($(ls ./$project_name/kubernetes/))
+  for file_name in "${app_yaml_files[@]}"; do
+    envsubst_preserve_empty_variables ./$project_name/kubernetes/$file_name
+  done
+  # apply each configuration yaml file with kubernetes
+  kubectl apply -f ./$project_name/kubernetes/
+}
+
+# function that reads variables to export as env variables from app_yaml_variables.yaml file.
+read_env_var_from_config_and_start_app() {
+variables_file="/home/$USER/app_yaml_variables.yaml"
+
+# Get the number of projects
+project_count=$(yq '.projects | length' "$variables_file")
+
+# Loop over each project
+for (( i=0; i<project_count; i++ )); do
+  project_name=$(yq ".projects[$i].name" "$variables_file")
+  echo "Project: $project_name"
+
+  # Get number of env variables for this project
+  env_count=$(yq ".projects[$i].env | length" "$variables_file")
+
+  # Loop over each env variable
+  for (( j=0; j<env_count; j++ )); do
+    env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
+    namespace=$(yq ".projects[$i].env[$j].namespace" "$variables_file")
+    github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
+    wait_for_readyness=$(yq ".projects[$i].wait_for_readyness // \"false\"" "$variables_file")
+    deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
+    env_value_clear=$(yq ".projects[$i].env[$j].value" "$variables_file")
+    base64_encoding=$(yq ".projects[$i].env[$j].base64_encoding // \"false\"" "$variables_file")
+
+    # Optional: decode if base64_encoding is true
+    if [[ "$base64_encoding" == "true" ]]; then
+      env_value=$(echo -n "$env_value_clear" | base64)
+    fi
+
+    echo "  Env Name: $env_name: $env_value"
+    export $env_name=$env_value
+    echo ""
+  done
+
+  # start application:
+  echo -e "${LBLUE}Starting application $project_name...${WHITE}"
+  start_app $github_repo
+
+  # wait for app to be ready
+  kubectl rollout status deployment $project_name -n $namespace --timeout=3000s
+  kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
+  wait
+
 done
+}
+
+read_env_var_from_config_and_start_app
+
+# # Configuring application settings
+# mkdir /home/$USER/temp
+# cp -R $repository_root_dir/binanceB/kubernetes/app/* /home/$USER/temp
+
+# # let's wait for mongodb deployment / stateful set to be ready
+# exit_loop=""
+# ready_deployment_condition="$mongodb_replica_count/$mongodb_replica_count"
+# while [ "$exit_loop" != "$ready_deployment_condition" ]; do
+#     sleep 10
+#     exit_loop=$(kubectl get deployment  -n mongodb mongodb | awk 'NR==2{print $2}')
+#     echo "Deployment / stateful pod ready: $exit_loop"
+# done
+
+
 
 # rm -rf /home/$USER/temp
 # rm -rf /home/$USER/main_config.yaml

@@ -1,6 +1,6 @@
 param(
 [string]$config_file_path,
-[string]$app_yaml_variables_file_path
+[string]$app_yaml_variables
 )
 
 # Install NuGet to download and install powershell-yaml to read and parse yaml files
@@ -13,7 +13,7 @@ if (!(Get-Module -ListAvailable -Name powershell-yaml)) {
 # READ ALL CONFIGURATION KEYS
 Import-Module powershell-yaml
 $config=Get-Content $config_file_path | ConvertFrom-YAML
-$config=Get-Content $app_yaml_variables_file_path | ConvertFrom-YAML
+$config=Get-Content $app_yaml_variables | ConvertFrom-YAML
 
 # Set the ssh folder where there are all the ssh key pairs
 $ssh_path = "$HOME\.ssh"
@@ -154,7 +154,7 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
 
 
         # Encode the main_config.yaml content into base64 (we'll use it to feed cloud-init)
-        $app_yaml_variables = Get-Content $app_yaml_variables_file_path -Raw
+        $app_yaml_variables = Get-Content $app_yaml_variables -Raw
         $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($app_yaml_variables)
         $encoded_app_yaml_variables = [System.Convert]::ToBase64String($encodedBytes)
     }

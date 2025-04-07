@@ -32,6 +32,3 @@ server_access_token_secret: 'server_access_token_secret'
 server_refresh_token_secret: 'server_refresh_token_secret'
 server_access_token_lifetime: '360' # IN MINUTES. Access token time where user is kept logged in (360 minutes)
 server_refresh_token_lifetime: '1440' # IN MINUTES. Refresh token time where used when access token expires, to generate a new one (1440 minutes)
-mongodb_replica_count: '1' # set to 1. More than one replica not working for now 'cause multiple fisical hosts would be needed in order to use a different load balancer ip address for each replica
-mongo_root_username: 'mongorootusername'
-mongo_root_password: 'mongorootpassword'

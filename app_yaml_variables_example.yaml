@@ -1,0 +1,21 @@
+projects:
+  - name: mongodb
+    github_repo: ''
+    env:
+      - name: mongo_root_username
+        value: mongodb_username
+      - name: mongo_root_username
+        value: mongo_password
+      - name: mongodb_replica_count # set to 1. More than one replica not working for now 'cause multiple fisical hosts would be needed in order to use a different load balancer ip address for each replica
+        value: '1'
+  # - name: binance_b_server
+  #   github_repo: ''
+  #   env:
+  #     - name: mongo_root_username
+  #       value: username
+  #     - name: mongo_root_username
+  #       value: password
+  #     - name: app_server_addr
+  #       value: '192.168.1.1'
+  #     - name: MONGODB_URI
+  #       value: mongodb://${mongo_root_username}:${mongo_root_password}@${$app_server_addr}:27017/project_1?authSource=admin
