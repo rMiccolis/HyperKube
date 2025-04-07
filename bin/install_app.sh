@@ -22,7 +22,7 @@ if [[ ${#temp_vars[@]} -gt 0 ]]; then
     var_name=$(echo "$var_name" | sed -E 's/\$//g')
 
     # If the variable is defined in the environment, replace it
-    if [[ -n "${!$var_name}" ]]; then
+    if [[ -n "${!var_name}" ]]; then
       # Replaces ${var} with the value of the environment variable
       sed -i "s|\${$var_name}|${!var_name}|g" $file_name
       # Replaces $var with the value of the environment variable
