@@ -50,6 +50,7 @@ start_app(){
   git clone $project_repository
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
+    echo "calling envsubst_preserve_empty_variables on: ./$project_name/kubernetes/$file_name"
     envsubst_preserve_empty_variables ./$project_name/kubernetes/$file_name
     # apply each configuration yaml file with kubernetes
     kubectl apply -f ./$project_name/kubernetes/$file_name
@@ -71,12 +72,12 @@ for (( i=0; i<project_count; i++ )); do
   # Get number of env variables for this project
   env_count=$(yq ".projects[$i].env | length" "$variables_file")
 
+  env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
+  namespace=$(yq ".projects[$i].env[$j].namespace" "$variables_file")
+  github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
+  deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
   # Loop over each env variable
   for (( j=0; j<env_count; j++ )); do
-    env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
-    namespace=$(yq ".projects[$i].env[$j].namespace" "$variables_file")
-    github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
-    deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
     env_value=$(yq ".projects[$i].env[$j].value" "$variables_file")
     base64_encoding=$(yq ".projects[$i].env[$j].base64_encoding // \"false\"" "$variables_file")
 
