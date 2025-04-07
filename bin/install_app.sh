@@ -48,12 +48,12 @@ start_app(){
   project_name=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
   echo -e "${LBLUE}Starting $project_name${WHITE}"
   git clone $project_repository
-  app_yaml_files=($(ls ./$project_name/kubernetes/))
+  app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
     envsubst_preserve_empty_variables ./$project_name/kubernetes/$file_name
+    # apply each configuration yaml file with kubernetes
+    kubectl apply -f ./$project_name/kubernetes/$file_name
   done
-  # apply each configuration yaml file with kubernetes
-  kubectl apply -f ./$project_name/kubernetes/
 }
 
 # function that reads variables to export as env variables from app_yaml_variables.yaml file.
