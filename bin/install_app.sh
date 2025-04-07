@@ -74,7 +74,6 @@ for (( i=0; i<project_count; i++ )); do
     env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
     namespace=$(yq ".projects[$i].env[$j].namespace" "$variables_file")
     github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
-    wait_for_readyness=$(yq ".projects[$i].wait_for_readyness // \"false\"" "$variables_file")
     deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
     env_value=$(yq ".projects[$i].env[$j].value" "$variables_file")
     base64_encoding=$(yq ".projects[$i].env[$j].base64_encoding // \"false\"" "$variables_file")
