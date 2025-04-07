@@ -19,3 +19,33 @@ projects:
   #       value: '192.168.1.1'
   #     - name: MONGODB_URI
   #       value: mongodb://${mongo_root_username}:${mongo_root_password}@${$app_server_addr}:27017/project_1?authSource=admin
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#  - name: binance_b_server
+#    github_repo: ''
+#    env:
+#      - name: mongo_root_username
+#        value: username
+#        base64_encoding: 'true'
+#      - name: mongo_root_password
+#        value: password
+#        base64_encoding: 'true'
+#      - name: app_server_addr
+#        value: 'bob617.ddns.net'
+#      - name: MONGODB_URI
+#        value: mongodb://${mongo_root_username}:${mongo_root_password}@${$app_server_addr}:27017/project_1?authSource=admin
+#      - name: server_replica_count
+#        value: '2'
+#      - name: environment
+#        value: 'production'
+#      - name: server_access_token_secret
+#        value: 'server_access_token_secret'
+#        base64_encoding: 'true'
+#      - name: server_refresh_token_secret
+#        value: 'server_refresh_token_secret'
+#        base64_encoding: 'true'
+#      - name: server_access_token_lifetime
+#        value: '360'
+#      - name: server_refresh_token_lifetime
+#        value: '1440'
