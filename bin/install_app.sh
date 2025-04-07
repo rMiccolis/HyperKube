@@ -76,12 +76,12 @@ for (( i=0; i<project_count; i++ )); do
     github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
     wait_for_readyness=$(yq ".projects[$i].wait_for_readyness // \"false\"" "$variables_file")
     deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
-    env_value_clear=$(yq ".projects[$i].env[$j].value" "$variables_file")
+    env_value=$(yq ".projects[$i].env[$j].value" "$variables_file")
     base64_encoding=$(yq ".projects[$i].env[$j].base64_encoding // \"false\"" "$variables_file")
 
     # Optional: decode if base64_encoding is true
     if [[ "$base64_encoding" == "true" ]]; then
-      env_value=$(echo -n "$env_value_clear" | base64)
+      env_value=$(echo -n "$env_value" | base64)
     fi
 
     echo "  Env Name: $env_name: $env_value"
