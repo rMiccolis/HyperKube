@@ -112,7 +112,7 @@ echo -e "${LGREEN}Phase 8 / 10 ===> Operation Done!${WHITE}"
 
 
 echo -e "${LGREEN}Starting phase 9 / 10 ===> Building server and client docker images and pushing them to docker hub${WHITE}"
-./HyperKube/bin/manage_docker_images.sh
+# ./HyperKube/bin/manage_docker_images.sh
 echo -e "${LGREEN}Phase 9 / 10 ===> Operation Done!${WHITE}"
 
 echo -e "${LGREEN}Instaling cert-manager for a let's encrypt certificate${WHITE}"
