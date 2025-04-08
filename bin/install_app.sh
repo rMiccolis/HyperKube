@@ -75,6 +75,13 @@ for (( i=0; i<project_count; i++ )); do
   namespace=$(yq ".projects[$i].namespace" "$variables_file")
   github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
   deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
+  port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
+  service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
+
+  # open tcp port on nginx helm installation
+  if [[ "$port" != "false" ]]; then
+      helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --set tcp.$port="$namespace/$service_name:$port"
+  fi
   # Loop over each env variable
   for (( j=0; j<env_count; j++ )); do
     env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
