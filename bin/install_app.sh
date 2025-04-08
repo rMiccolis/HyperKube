@@ -50,10 +50,10 @@ start_app(){
   git clone $project_repository
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
-    echo "calling envsubst_preserve_empty_variables on: ./$project_name/kubernetes/$file_name"
-    envsubst_preserve_empty_variables ./$project_name/kubernetes/$file_name
+    echo "calling envsubst_preserve_empty_variables on: $file_name"
+    envsubst_preserve_empty_variables $file_name
     # apply each configuration yaml file with kubernetes
-    kubectl apply -f ./$project_name/kubernetes/$file_name
+    kubectl apply -f $file_name
   done
 }
 
