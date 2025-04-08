@@ -72,12 +72,12 @@ for (( i=0; i<project_count; i++ )); do
   # Get number of env variables for this project
   env_count=$(yq ".projects[$i].env | length" "$variables_file")
 
-  env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
   namespace=$(yq ".projects[$i].env[$j].namespace" "$variables_file")
   github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
   deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
   # Loop over each env variable
   for (( j=0; j<env_count; j++ )); do
+    env_name=$(yq ".projects[$i].env[$j].name" "$variables_file")
     env_value=$(yq ".projects[$i].env[$j].value" "$variables_file")
     base64_encoding=$(yq ".projects[$i].env[$j].base64_encoding // \"false\"" "$variables_file")
 
@@ -96,7 +96,17 @@ for (( i=0; i<project_count; i++ )); do
   start_app $github_repo
 
   # wait for app to be ready
-  kubectl rollout status deployment $project_name -n $namespace --timeout=3000s
+  # kubectl rollout status deployment $project_name -n $namespace --timeout=3000s
+  # let's wait for mongodb deployment / stateful set to be ready
+  if [[ "${project_name,,}" == "mongodb" ]]; then
+    exit_loop=""
+    ready_deployment_condition="$mongodb_replica_count/$mongodb_replica_count"
+    while [ "$exit_loop" != "$ready_deployment_condition" ]; do
+        sleep 10
+        exit_loop=$(kubectl get deployment  -n $namespace $project_name | awk 'NR==2{print $2}')
+        echo "Deployment / stateful pod ready: $exit_loop"
+    done
+  fi
   kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
   wait
 
@@ -108,17 +118,6 @@ read_env_var_from_config_and_start_app
 # # Configuring application settings
 # mkdir /home/$USER/temp
 # cp -R $repository_root_dir/binanceB/kubernetes/app/* /home/$USER/temp
-
-# # let's wait for mongodb deployment / stateful set to be ready
-# exit_loop=""
-# ready_deployment_condition="$mongodb_replica_count/$mongodb_replica_count"
-# while [ "$exit_loop" != "$ready_deployment_condition" ]; do
-#     sleep 10
-#     exit_loop=$(kubectl get deployment  -n mongodb mongodb | awk 'NR==2{print $2}')
-#     echo "Deployment / stateful pod ready: $exit_loop"
-# done
-
-
 
 # rm -rf /home/$USER/temp
 # rm -rf /home/$USER/main_config.yaml
