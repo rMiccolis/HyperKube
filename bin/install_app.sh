@@ -93,7 +93,7 @@ for (( i=0; i<project_count; i++ )); do
       env_value=$(echo -n "$env_value" | base64)
     fi
 
-    echo "  Env Name: $env_name: $env_value"
+    # echo "  Env Name: $env_name: $env_value"
     export $env_name=$env_value
     echo ""
   done
@@ -103,7 +103,7 @@ for (( i=0; i<project_count; i++ )); do
   start_app $github_repo
 
   # wait for app to be ready
-  kubectl rollout status deployment $project_name -n $namespace --timeout=3000s
+  kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
   # # let's wait for mongodb deployment / stateful set to be ready
   # if [[ "${project_name,,}" == "mongodb" ]]; then
   #   exit_loop=""
