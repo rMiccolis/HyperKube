@@ -4,13 +4,12 @@ Cloud-like application, with educational purposes, for cryptocurrency trading se
 This project is intended for educational purposes and to learn something new about IaC (Infrastructure as Code) and cloud development, for this reason some choices may result unusual because the project tries to simulate the cloud behavior but on bare metal. This choice is made to handle costs, given that the development of this project is performed in spare time (non-working time) and could take many months, so picking a real cloud provider could be very expensive.\
 Because of this, the projects offers a PowerShell script that creates linux (ubuntu cloud image) VMs (with hyper-v as hypervisor) on the fly and configures them using cloud-init.
 
-There are 5 main scripts that create and configure all the infrastructure and both need a configuration yaml file (main_config.yaml) to be executed (an example is found at main_config.example.yaml)
+There are 4 main scripts that create and configure all the infrastructure and need a configuration yaml file (main_config.yaml) to be executed (an example is found at main_config.example.yaml)
 
 **Script Description:**
 
 - **infrastructure/windows/generate_hyperv_vms.ps1:** This is the script that manages the generation and configuration of ubuntu virtual machines. The script makes use of cloud-init in order to give the initial configuration to VMs. At the end of the script, it opens a cmd instance and copies to clipboard the command to be pasted in in order to start the start.sh script.
 - **infrastructure/start.sh:** This script is excecuted on the main VM and performs all the tasks to create a kubernetes cluster and install the client-server application on it.
-- **bin/manage_docker_images.sh:** This script is usefull when an update of server or client (or both) docker image is needed.
 - **bin/setup_worker_nodes.sh:** This script is usefull to join a new node to the cluster (control plane or worker) and configure it (install docker, kubernetes, ecc...)
 - **bin/add_wireguard_peer.sh:** Run this script to generate a Wireguard peer configuration. It prints out the qr code to be scanned by Android or IOS app to join the vpn.
 
@@ -21,10 +20,10 @@ There are 5 main scripts that create and configure all the infrastructure and bo
 ### tested versions
 
 - Ubuntu version: Ubuntu Server 24.04 LTS (Noble Numbat) (QCow2 UEFI/GPT Bootable disk image)
-- Kernel version: Linux 5.4.0-148-generic
-- Docker version: 23.0.5 (scritps always try to install latest version)
-- Cri-dockerd version: 0.3.14 (scritps always try to install latest version)
-- Kubernetes version 1.30.2 (scritps always try to install latest version)
+- Kernel version: Linux 6.8.0-57-generic
+- Docker version: 28.0.4, build b8034c0 (scritps always try to install latest version)
+- Cri-dockerd version: 0.3.17 (scritps always try to install latest version)
+- Kubernetes version: v1.32.3 (scritps always try to install latest version)
 
 After creating VM with a linux distro: (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
 
@@ -47,8 +46,6 @@ After creating VM with a linux distro: (Skip these steps if launching infrastruc
 - Open 443 port on the modem/router to let application be reachable with SSL encryption and have a secure connection over HTTPS.
 - Open 80 port on the modem/router to let script automatically obtain a Let's Encrypy SSL certificate to be used for HTTPS connection (it can be turned off after script ends).
 - Create a [docker access token](https://docs.docker.com/docker-hub/access-tokens/) (to be provided into main_config.yaml)
-- Create the client docker repository
-- Create the server docker repository
 
 ## Launch script for auto creating VM on hyper-v (windows) and setup and boot all the application
 
@@ -69,7 +66,7 @@ Input parameter:
 - app_yaml_variables => This is the path to the configuration file and MUST be called "app_yaml_variables.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order). Example [HERE](https://github.com/rMiccolis/HyperKube/blob/master/app_yaml_variables.yaml)
 
 ```powershell
-powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -config_file_path "E:\Download\main_config.yaml"
+powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -config_file_path "E:\Download\main_config.yaml" -app_yaml_variables "E:\Download\app_yaml_variables.yaml"
 ```
 
 --------------------------------------------
