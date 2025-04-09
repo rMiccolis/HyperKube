@@ -1,51 +1,49 @@
 projects:
   - name: mongodb
-    github_repo: ''
+    namespace: mongodb
+    port: 27017 # only to open port on nginx ingress-controller (not needed for standard ports like 80-443)
+    service_name: mongodb # useful only if 'projects.port' is set
+    github_repo: 'https://github.com/rMiccolis/mongodb.git'
+    deployment: 'true'
     env:
       - name: mongo_root_username
         value: mongodb_username
-      - name: mongo_root_username
+        base64_encoding: 'true'
+      - name: mongo_root_password
         value: mongo_password
+        base64_encoding: 'true'
       - name: mongodb_replica_count # set to 1. More than one replica not working for now 'cause multiple fisical hosts would be needed in order to use a different load balancer ip address for each replica
         value: '1'
-  # - name: binance_b_server
-  #   github_repo: ''
-  #   env:
-  #     - name: mongo_root_username
-  #       value: username
-  #     - name: mongo_root_username
-  #       value: password
-  #     - name: app_server_addr
-  #       value: '192.168.1.1'
-  #     - name: MONGODB_URI
-  #       value: mongodb://${mongo_root_username}:${mongo_root_password}@${$app_server_addr}:27017/project_1?authSource=admin
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#  - name: binance_b_server
-#    github_repo: ''
-#    env:
-#      - name: mongo_root_username
-#        value: username
-#        base64_encoding: 'true'
-#      - name: mongo_root_password
-#        value: password
-#        base64_encoding: 'true'
-#      - name: app_server_addr
-#        value: 'bob617.ddns.net'
-#      - name: MONGODB_URI
-#        value: mongodb://${mongo_root_username}:${mongo_root_password}@${$app_server_addr}:27017/project_1?authSource=admin
-#      - name: server_replica_count
-#        value: '2'
-#      - name: environment
-#        value: 'production'
-#      - name: server_access_token_secret
-#        value: 'server_access_token_secret'
-#        base64_encoding: 'true'
-#      - name: server_refresh_token_secret
-#        value: 'server_refresh_token_secret'
-#        base64_encoding: 'true'
-#      - name: server_access_token_lifetime
-#        value: '360'
-#      - name: server_refresh_token_lifetime
-#        value: '1440'
+  - name: binance-bot
+    github_repo: 'https://github.com/rMiccolis/binance-bot.git'
+    namespace: binance-bot
+    env:
+      - name: docker_username
+        value: your_username
+      - name: docker_server_repository_name
+        value: binanceb_nodejs_server
+      - name: docker_client_repository_name
+        value: binanceb_vuejs_client
+      - name: mongo_root_username
+        value: mongodb_username
+        base64_encoding: 'true'
+      - name: mongo_root_password
+        value: mongo_password
+        base64_encoding: 'true'
+      - name: app_server_addr
+        value: 'your_public_ip.com'
+      - name: server_replica_count
+        value: '2'
+      - name: environment
+        value: 'production'
+      - name: server_access_token_secret
+        value: 'server_access_token_secret'
+        base64_encoding: 'true'
+      - name: server_refresh_token_secret
+        value: 'server_refresh_token_secret'
+        base64_encoding: 'true'
+      - name: server_access_token_lifetime
+        value: '360'
+      - name: server_refresh_token_lifetime
+        value: '1440'

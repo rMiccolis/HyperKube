@@ -40,8 +40,6 @@ fi
 #   3) apply those configuration yaml files
 start_app(){
   project_repository=$1
-  mkdir apps
-  cd apps
   app_names=()
   # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
   IFS='/' read -r -a app_names <<< $project_repository
@@ -74,7 +72,6 @@ for (( i=0; i<project_count; i++ )); do
 
   namespace=$(yq ".projects[$i].namespace" "$variables_file")
   github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
-  deployment=$(yq ".projects[$i].deployment // \"false\"" "$variables_file")
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
 
@@ -120,6 +117,8 @@ for (( i=0; i<project_count; i++ )); do
 done
 }
 
+mkdir apps
+cd apps
 read_env_var_from_config_and_start_app
 
 # # Configuring application settings
