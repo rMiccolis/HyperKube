@@ -8,9 +8,9 @@ At its core, the project automates the creation of Ubuntu virtual machines with 
 
 The automation extends to the deployment and configuration of critical network and application infrastructure components, including:
 
-- **<0xF0><0x9F><0x93><0x87> BIND9 DNS Server:** For internal domain name resolution within the environment.
-- **<0xF0><0x9F><0x97><0x8E>️ Wireguard VPN:** Providing secure and private network connectivity to the infrastructure.
-- **🐳 Docker and <0xF0><0x9F><0x9B><0x80> Kubernetes:** The foundation for containerized application deployment and orchestration.
+- **💻 BIND9 DNS Server:** For internal domain name resolution within the environment.
+- **🛡️ Wireguard VPN:** Providing secure and private network connectivity to the infrastructure.
+- **🐳 Docker and Kubernetes:** The foundation for containerized application deployment and orchestration.
 - **🌐 Calico:** As the Container Network Interface (CNI) for Kubernetes networking.
 - **⚖️ MetalLB:** Enabling bare-metal load balancing, providing stable IP addresses for services.
 - **📦 Helm:** A Kubernetes package manager for simplifying the installation and management of applications.
@@ -21,10 +21,10 @@ Furthermore, the project facilitates the deployment of user-defined applications
 
 **In essence, this project offers a self-contained, customizable, and cost-effective way to:**
 
-- **<0xF0><0x9F><0xA7><0xAE> Learn and experiment** with cloud-native technologies like Kubernetes, Docker, and associated ecosystem tools in a realistic environment.
+- **Learn and experiment** with cloud-native technologies like Kubernetes, Docker, and associated ecosystem tools in a realistic environment.
 - **🧪 Develop and test applications** in a simulated production setting before deploying to actual cloud providers.
 - **⚙️ Understand the underlying infrastructure** and configurations required for a cloud-based application deployment.
-- **<0xF0><0x9F><0x91><0xBD>️ Create isolated and reproducible environments** for development, testing, or demonstration purposes.
+- **Create isolated and reproducible environments** for development, testing, or demonstration purposes.
 
 By abstracting away the complexities of manual setup and configuration, the project empowers users to quickly spin up and manage a sophisticated simulated production environment, fostering learning, experimentation, and efficient application development workflows.
 
