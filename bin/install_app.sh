@@ -11,7 +11,7 @@ file_name=$1
 vars=$(grep -oP '\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}|\$([a-zA-Z_][a-zA-Z0-9_]*)' $file_name | sort -u)
 temp_vars=($vars)
 if [[ ${#temp_vars[@]} -gt 0 ]]; then
-  echo "variables to be substituted: $vars"
+  # echo "variables to be substituted: $vars"
 
   # Step 2: For each variable found, check whether it is defined in the environment
   while read -r var; do
@@ -44,7 +44,7 @@ start_app(){
   # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
   IFS='/' read -r -a app_names <<< $project_repository
   project_name=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
-  echo -e "${LBLUE}Starting $project_name${WHITE}"
+  # echo -e "${LBLUE}Starting $project_name${WHITE}"
   git clone $project_repository
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
@@ -65,7 +65,7 @@ project_count=$(yq '.projects | length' "$variables_file")
 # Loop over each project
 for (( i=0; i<project_count; i++ )); do
   project_name=$(yq ".projects[$i].name" "$variables_file")
-  echo "Project: $project_name"
+  # echo "Project: $project_name"
 
   # Get number of env variables for this project
   env_count=$(yq ".projects[$i].env | length" "$variables_file")

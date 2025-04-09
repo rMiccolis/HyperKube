@@ -9,6 +9,7 @@ HyperKube creates a simulated private cloud-like network for all VMs using the f
 - Secure peer-to-peer VPN connection between all VMs
 - Allows communication between machines on different networks (ex: master on LAN, workers on a VM bridge)
 - QR code output makes it easy to join mobile or remote nodes
+- Is possible to setup the kubernetes cluster upon its interfacewith http protocol instead of public IP and https
 
 ---
 
