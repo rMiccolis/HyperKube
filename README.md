@@ -1,6 +1,6 @@
 # HyperKube
 
-## Project Description: Homemade AWS Production Environment Simulator
+## Project Description: AWS Production Environment Simulator
 
 This project provides a powerful and flexible solution for simulating a production-like cloud environment directly on a Windows operating system using Hyper-V virtualization. Instead of relying on actual AWS services, it uses some custom automation scripts to provision and configure a fully functional, bare-metal infrastructure.
 
