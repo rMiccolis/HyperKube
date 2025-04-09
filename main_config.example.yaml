@@ -4,9 +4,9 @@ noip_username: 'noip_username' # set to '' to not use noip for ddns for the load
 noip_password: 'noip_password' # set to '' to not use noip for ddns for the load_balancer_dns_name
 android_app_ready: 'true' # set to true to support the building of android app (in capacitor.config.json insert the ${master_host_VPN_ip} as for ex: 10.11.1.1 and not the dns name). The app will be reachable at that IP (10.11.1.1)
 app_run_on_vpn: 'false' # set to true if you want app to work behind a vpn. Set to false if you want to use https protocol. IMPORTANT: even if you set false, variables for vpn configuration are needed.
-application_dns_name: 'binanceb.com' # this will be the dns to reach the entire cluster from the vpn
+application_dns_name: 'bob617.ddns.net' # this will be the dns to reach the entire cluster from the vpn
 load_balancer_dns_name: 'cluster.ddns.com' # public dns name where main server is reachable. For a "domestic" use, adopt a free DDNS service (see no-ip.com website) to set this name, in this case set the public ddns from no-ip
-load_balancer_public_ip: '2.42.42.133' # this is the cluster public IP (your load balancer public IP)
+load_balancer_public_ip: 'bob617.ddns.net' # this is the cluster public IP (your load balancer public IP)
 # For each of the following hosts must be provided: host_username@internal_ip_address@desired_vpn_ip
 master_host: 'm1@192.168.1.200@10.11.1.1' # kubernetes master host IP from which everything is executed: provide it from internal interface (192.168...)
 hosts: # list of ONLY worker and other control plane nodes: made in the form of: USERNAME@IP_ADDRESS
@@ -25,10 +25,3 @@ docker_username: 'docker_username' # used to build and push docker images to rep
 docker_access_token: 'your_docker_access_token' # used to build and push docker images to repository. To not confuse with password
 docker_server_repository_name: 'binanceb_nodejs_server' # used to push docker server image from repository and pull by kubernetes
 docker_client_repository_name: 'binanceb_vuejs_client' # used to push docker client image from repository and pull by kubernetes
-# application config parameters:
-environment: 'dev' # this will cause application to log less info instead of 'dev' option
-server_replica_count: '2'
-server_access_token_secret: 'server_access_token_secret'
-server_refresh_token_secret: 'server_refresh_token_secret'
-server_access_token_lifetime: '360' # IN MINUTES. Access token time where user is kept logged in (360 minutes)
-server_refresh_token_lifetime: '1440' # IN MINUTES. Refresh token time where used when access token expires, to generate a new one (1440 minutes)
