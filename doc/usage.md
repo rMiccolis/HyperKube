@@ -1,8 +1,8 @@
-## INSTRUCTION TO RUN THE INFRASTRUCTURE SETUP
+## 🛠️ INSTRUCTIONS TO RUN THE INFRASTRUCTURE SETUP
 
-## Virtual machine operations
+## ⚙️Virtual machine operations
 
-### tested versions
+### ✅ tested versions
 
 - Ubuntu version: Ubuntu Server 24.04 LTS (Noble Numbat) (QCow2 UEFI/GPT Bootable disk image)
 - Kernel version: Linux 6.8.0-57-generic
@@ -10,7 +10,7 @@
 - Cri-dockerd version: 0.3.17 (scritps always try to install latest version)
 - Kubernetes version: v1.32.3 (scritps always try to install latest version)
 
-After creating VM with a linux distro: (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
+⚠️ After creating VM with a linux distro: (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
 
 - Disable windows secure boot
 - Set minimum 50GB of disk space
@@ -19,18 +19,18 @@ After creating VM with a linux distro: (Skip these steps if launching infrastruc
 
 ## Mandatory OS OPerations before executing './infrastructure/start.sh' (follow these steps in the example paragraph)
 
-- **Choose a linux distro which makes use of systemd as init service**
-- **Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list =>  00 15 5D 38 01 30,  00 15 5D 38 01 31,  00 15 5D 38 01 32...)
-- **If you don't have a static public IP, you need to setup NO-IP DDNS service in order to make wireguard work.**
-- **Install an ssh server** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
-- **Add all cluster partecipating hosts to the hosts file**
-- **Copy ssh public key into .ssh authorized_keys file of the remote host to use ssh connection without password prompt** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
-- **Enable passwordless sudo to the system user account to which connect through ssh (in sudoers file append using sudo visudo: $USER ALL=(ALL) NOPASSWD: ALL) [Where $USER is your username on your system ]** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
+- **🐧 Choose a linux distro which makes use of systemd as init service**
+- **💻 Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list =>  00 15 5D 38 01 30,  00 15 5D 38 01 31,  00 15 5D 38 01 32...)
+- **🌐 If you don't have a static public IP, you need to setup NO-IP DDNS service in order to make wireguard work.**
+- **🔑 Install an ssh server** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
+- **🤝 Add all cluster partecipating hosts to the hosts file**
+- **🔒 Copy ssh public key into .ssh authorized_keys file of the remote host to use ssh connection without password prompt** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
+- **🛡️ Enable passwordless sudo to the system user account to which connect through ssh (in sudoers file append using sudo visudo: $USER ALL=(ALL) NOPASSWD: ALL) [Where $USER is your username on your system ]** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
 - Open 51820 port (the Wireguard VPN port) on the modem/router to let application and mongodb database to be reachable (if VPN is selected).
 - Open 27017 port (the default MongoDB port) on the modem/router to let application and mongodb database to be reachable.
 - Open 443 port on the modem/router to let application be reachable with SSL encryption and have a secure connection over HTTPS.
 - Open 80 port on the modem/router to let script automatically obtain a Let's Encrypy SSL certificate to be used for HTTPS connection (it can be turned off after script ends).
-- Create a [docker access token](https://docs.docker.com/docker-hub/access-tokens/) (to be provided into main_config.yaml)
+- 🔑 Create a [docker access token](https://docs.docker.com/docker-hub/access-tokens/) (to be provided into main_config.yaml)
 
 ## Launch script for auto creating VM on hyper-v (windows) and setup and boot all the application
 
