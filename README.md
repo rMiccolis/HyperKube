@@ -1,8 +1,34 @@
 # HyperKube
 
-Cloud-like application, with educational purposes, for cryptocurrency trading served via browser and Android application. Based on microservices architecture, it implements the Infrastructure as Code process allowing the generation of virtual machines and creation of a Kubernetes cluster on which is automatically installed the application. \
-This project is intended for educational purposes and to learn something new about IaC (Infrastructure as Code) and cloud development, for this reason some choices may result unusual because the project tries to simulate the cloud behavior but on bare metal. This choice is made to handle costs, given that the development of this project is performed in spare time (non-working time) and could take many months, so picking a real cloud provider could be very expensive.\
-Because of this, the projects offers a PowerShell script that creates linux (ubuntu cloud image) VMs (with hyper-v as hypervisor) on the fly and configures them using cloud-init.
+## Project Description: Homemade AWS Production Environment Simulator
+
+This project provides a powerful and flexible solution for simulating a production-like cloud environment directly on a Windows operating system using Hyper-V virtualization. Instead of relying on actual AWS services, it uses some custom automation scripts to provision and configure a fully functional, bare-metal infrastructure.
+
+At its core, the project automates the creation of Ubuntu virtual machines with user-defined specifications. Leveraging cloud-init, these VMs are initialized with essential configurations, paving the way for a comprehensive ecosystem of production-grade tools.
+
+The automation extends to the deployment and configuration of critical network and application infrastructure components, including:
+
+- **BIND9 DNS Server:** For internal domain name resolution within the environment.
+- **Wireguard VPN:** Providing secure and private network connectivity to the infrastructure.
+- **Docker and Kubernetes:** The foundation for containerized application deployment and orchestration.
+- **Calico:** As the Container Network Interface (CNI) for Kubernetes networking.
+- **MetalLB:** Enabling bare-metal load balancing, providing stable IP addresses for services.
+- **Helm:** A Kubernetes package manager for simplifying the installation and management of applications.
+- **Nginx Ingress Controller:** Managing external access to applications running within the Kubernetes cluster.
+- **cert-manager:** Automating the acquisition and renewal of Let's Encrypt SSL certificates for secure HTTPS connections.
+
+Furthermore, the project facilitates the deployment of user-defined applications by cloning project repositories and installing them onto the Kubernetes cluster based on provided YAML configurations. It even supports variable substitution within these configuration files, allowing for environment-specific settings.
+
+**In essence, this project offers a self-contained, customizable, and cost-effective way to:**
+
+- **Learn and experiment with cloud-native technologies** like Kubernetes, Docker, and associated ecosystem tools in a realistic environment.
+- **Develop and test applications** in a simulated production setting before deploying to actual cloud providers.
+- **Understand the underlying infrastructure** and configurations required for a cloud-based application deployment.
+- **Create isolated and reproducible environments** for development, testing, or demonstration purposes.
+
+By abstracting away the complexities of manual setup and configuration, the project empowers users to quickly spin up and manage a sophisticated simulated production environment, fostering learning, experimentation, and efficient application development workflows.
+
+___
 
 There are 4 main scripts that create and configure all the infrastructure and need a configuration yaml file (main_config.yaml) to be executed (an example is found at main_config.example.yaml)
 
@@ -69,7 +95,7 @@ Input parameter:
 powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -config_file_path "E:\Download\main_config.yaml" -app_yaml_variables "E:\Download\app_yaml_variables.yaml"
 ```
 
---------------------------------------------
+___
 
 ## MANUAL STARTUP EXAMPLE (NOT RECOMMENDED!)
 
