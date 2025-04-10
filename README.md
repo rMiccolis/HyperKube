@@ -40,3 +40,8 @@ There are 4 main scripts that create and configure all the infrastructure and ne
 - **🔗 `bin/add_wireguard_peer.sh`:** Run this script to generate a Wireguard peer configuration. It prints out the QR code to be scanned by Android or iOS apps to join the VPN.
 
 # 📚 FOR USAGE REFER TO: [usage.md](https://github.com/rMiccolis/HyperKube/blob/master/doc/usage.md)
+
+
+Copyright © 2025 Roberto Miccolis. Tutti i diritti riservati.
+
+Questo repository contiene il codice sorgente dell'applicazione HyperKube. Tutti i diritti di proprietà intellettuale sono riservati a Roberto Miccolis. L'utilizzo, la copia, la modifica o la distribuzione di questo codice per scopi commerciali o non personali sono vietati senza esplicita autorizzazione.
