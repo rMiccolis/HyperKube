@@ -79,6 +79,7 @@ for (( i=0; i<project_count; i++ )); do
 
   # open tcp port on nginx helm installation
   if [[ "$project_name" == "mongodb" ]]; then
+      kubectl create namespace $namespace
       apply_tls_certificate
   fi
 
