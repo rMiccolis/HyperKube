@@ -40,12 +40,13 @@ fi
 #   3) apply those configuration yaml files
 start_app(){
   project_repository=$1
+  branch=$2
   app_names=()
   # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
   IFS='/' read -r -a app_names <<< $project_repository
   project_name=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
   # echo -e "${LBLUE}Starting $project_name${WHITE}"
-  git clone $project_repository
+  git clone --single-branch --branch $branch $project_repository
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
     echo "calling envsubst_preserve_empty_variables on: $file_name"
@@ -72,8 +73,14 @@ for (( i=0; i<project_count; i++ )); do
 
   namespace=$(yq ".projects[$i].namespace" "$variables_file")
   github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
+  branch=$(yq ".projects[$i].branch // \"master\"" "$variables_file")
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
+
+  # open tcp port on nginx helm installation
+  if [[ "$project_name" == "mongodb" ]]; then
+      apply_tls_certificate
+  fi
 
   # open tcp port on nginx helm installation
   if [[ "$port" != "false" ]]; then
@@ -97,7 +104,7 @@ for (( i=0; i<project_count; i++ )); do
 
   # start application:
   echo -e "${LBLUE}Starting application $project_name...${WHITE}"
-  start_app $github_repo
+  start_app $github_repo $branch
 
   # wait for app to be ready
   kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
@@ -115,6 +122,20 @@ for (( i=0; i<project_count; i++ )); do
   wait
 
 done
+}
+
+apply_tls_certificate(){
+  # setting variables for tls certificate
+  KEY_FILE='cluster-key-cert.key'
+  CERT_FILE='cluster-filecert.crt'
+  HOST="$app_server_addr"
+  cert_file_name='tls-cert'
+  # create a certificate for https protocol
+  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ${KEY_FILE} -out ${CERT_FILE} -subj "/CN=${HOST}/O=${HOST}" -addext "subjectAltName = DNS:${HOST}"
+  # creating tls certificate in 'default' namespace
+  kubectl create secret tls $cert_file_name --key ${KEY_FILE} --cert ${CERT_FILE} -n mongodb
+
+  kubectl create configmap mongodb-config --from-file=/home/m1/mongod.conf -n mongodb
 }
 
 mkdir apps
