@@ -137,8 +137,22 @@ apply_tls_certificate(){
 
   # create a tls.pem file from combination of $CERT_FILE and $KEY_FILE
   cat $KEY_FILE $CERT_FILE > tls.pem
-  kubectl create secret tls $cert_file_name --key ${KEY_FILE} --cert ${CERT_FILE} -n mongodb
+  # kubectl create secret tls $cert_file_name --key ${KEY_FILE} --cert ${CERT_FILE} -n mongodb
+  kubectl create secret generic tls-cert --from-file=tls.crt=tls.pem -n mongodb
 
+
+  # create mongod.conf file to tell mongodb to use it for configuration (it contains tls certificates)
+cat << EOF | sudo tee -a /etc/hosts > /dev/null
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+  tls:
+    mode: requireTLS
+    certificateKeyFile: /etc/mongodb/tls/tls.crt
+    # CAFile: /etc/mongodb/ca/ca.crt # Optional for client validation
+	  CAFile: /etc/mongodb/tls/tls.crt # i pass the same file as 'certificateKeyFile' because the certificate is self signed
+    allowConnectionsWithoutCertificates: false # Recommended for security
+EOF
   kubectl create configmap mongodb-config --from-file=/home/m1/mongod.conf -n mongodb
 }
 
