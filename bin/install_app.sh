@@ -134,6 +134,9 @@ apply_tls_certificate(){
   # create a certificate for https protocol
   openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ${KEY_FILE} -out ${CERT_FILE} -subj "/CN=${HOST}/O=${HOST}" -addext "subjectAltName = DNS:${HOST}"
   # creating tls certificate in 'default' namespace
+
+  # create a tls.pem file from combination of $CERT_FILE and $KEY_FILE
+  cat $KEY_FILE $CERT_FILE > tls.pem
   kubectl create secret tls $cert_file_name --key ${KEY_FILE} --cert ${CERT_FILE} -n mongodb
 
   kubectl create configmap mongodb-config --from-file=/home/m1/mongod.conf -n mongodb
