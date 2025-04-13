@@ -85,7 +85,7 @@ fi
 
 
 interface_range=()
-IFS='.' read -r -a interface_range <<< "$master_host_ip"
+IFS='.' read -r -a interface_range <<< "$master_host_ip_vpn"
 interface_1=${interface_range[0]}
 interface_2=${interface_range[1]}
 interface_3=${interface_range[2]}
@@ -98,7 +98,7 @@ sudo cat << EOF | tee /home/$USER/wireguard/config_files/${peer_name}_wg0.conf >
 ListenPort = 51820
 Address = $peer_ip/24
 PrivateKey = $(cat ${peer_name}_privatekey)
-Dns = ${master_host_ip}, 8.8.8.8, 8.8.4.4
+Dns = ${master_host_ip_vpn}, 8.8.8.8, 8.8.4.4
 
 [Peer]
 PublicKey = $(cat /home/$USER/wireguard/keys/${master_host_name}_publickey)
@@ -115,7 +115,7 @@ echo -e "${LBLUE}This is the Configuration file for $peer_name ${WHITE}"
 echo -e "${LBLUE}Available at /home/$USER/wireguard/config_files/${peer_name}_wg0.conf ${WHITE}"
 echo "Text configuration at:"
 echo "$(cat /home/$USER/wireguard/config_files/${peer_name}_wg0.conf)"
-cat /home/$USER/wireguard/config_files/${peer_name}_wg0.conf | qrencode -t ansiutf8 
+cat /home/$USER/wireguard/config_files/${peer_name}_wg0.conf | qrencode -t ansiutf8
 
 sudo wg-quick down wg0
 sleep 5
