@@ -142,15 +142,14 @@ apply_tls_certificate(){
 
 
   # create mongod.conf file to tell mongodb to use it for configuration (it contains tls certificates)
-cat << EOF | sudo tee -a /home/$USER/mongod.conf > /dev/null
+cat << EOF | sudo tee /home/$USER/mongod.conf > /dev/null
 net:
   port: 27017
   bindIp: 0.0.0.0
   tls:
     mode: requireTLS
     certificateKeyFile: /etc/mongodb/tls/tls.crt
-    # CAFile: /etc/mongodb/ca/ca.crt # Optional for client validation
-	  CAFile: /etc/mongodb/tls/tls.crt # i pass the same file as 'certificateKeyFile' because the certificate is self signed
+    CAFile: /etc/mongodb/tls/tls.crt # i pass the same file as 'certificateKeyFile' because the certificate is self signed
     allowConnectionsWithoutCertificates: false # Recommended for security
 EOF
   kubectl create configmap mongodb-config --from-file=/home/$USER/mongod.conf -n mongodb
