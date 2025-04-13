@@ -43,6 +43,7 @@ if [ "$app_run_on_vpn" == "true" ]; then
     export host_ip_index=2
 fi
 export master_host_ip=${master_host_vpn_ip[$host_ip_index]}
+export master_host_ip_vpn=${master_host_vpn_ip[2]}
 if [ "$android_app_ready" == "true" ]; then
     export app_server_addr=$load_balancer_dns_name
 fi
@@ -70,6 +71,7 @@ export app_server_addr=$app_server_addr
 export application_dns_name=$application_dns_name
 export master_host_ip_eth0=$master_host_ip_eth0
 export master_host_ip=$master_host_ip
+export master_host_ip_vpn=$master_host_ip_vpn
 export master_host_name=$master_host_name
 export hosts="${hosts[@]}"
 export host_list="${hosts[@]}"
