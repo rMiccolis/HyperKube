@@ -51,7 +51,7 @@ start_app(){
   git clone --single-branch --branch $branch $project_repository
   chmod u+x -R $project_name
   if [[ "$exec_script_before_deploy" != "false" ]]; then
-    kubectl create namespace $namespace
+    echo "Calling ./$project_name/bin/${exec_script_before_deploy}"
     ./$project_name/bin/${exec_script_before_deploy}
   fi
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
@@ -65,11 +65,11 @@ start_app(){
     kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
     wait
 
-    if [[ "$exec_script_after_deploy" != "false" ]]; then
-      kubectl create namespace $namespace
-      ./$project_name/bin/${exec_script_after_deploy}
-    fi
   done
+  if [[ "$exec_script_after_deploy" != "false" ]]; then
+    echo "Calling ./$project_name/bin/${exec_script_after_deploy}"
+    ./$project_name/bin/${exec_script_after_deploy}
+  fi
 }
 
 # function that reads variables to export as env variables from app_yaml_variables.yaml file.
@@ -94,6 +94,9 @@ for (( i=0; i<project_count; i++ )); do
   exec_script_after_deploy=$(yq ".projects[$i].exec_script_after_deploy // \"false\"" "$variables_file")
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
+
+  # create project namespace
+  kubectl create namespace $namespace
 
   # open tcp port on nginx helm installation
   if [[ "$port" != "false" ]]; then
