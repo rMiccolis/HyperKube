@@ -122,7 +122,7 @@ for (( i=0; i<project_count; i++ )); do
   wait
 
   if [[ "$project_name" == "mongodb" ]]; then
-    mv 7-mongodb-deployment-tls-config.yaml.bak 7-mongodb-deployment-tls-config.yaml
+    mv ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml.bak ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml
     kubectl apply -f ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml
     kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
     kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
