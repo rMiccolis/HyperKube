@@ -60,15 +60,16 @@ start_app(){
     envsubst_preserve_empty_variables $file_name
     # apply each configuration yaml file with kubernetes
     kubectl apply -f $file_name
+  done
     # wait for resources to be ready
     kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
     kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
     wait
-
-  done
   if [[ "$exec_script_after_deploy" != "false" ]]; then
     echo "Calling ./$project_name/bin/${exec_script_after_deploy}"
     ./$project_name/bin/${exec_script_after_deploy}
+    kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
+    wait
   fi
 }
 
