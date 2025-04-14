@@ -77,7 +77,6 @@ for (( i=0; i<project_count; i++ )); do
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
 
-  # open tcp port on nginx helm installation
   if [[ "$project_name" == "mongodb" ]]; then
       kubectl create namespace $namespace
       apply_tls_certificate
@@ -121,6 +120,14 @@ for (( i=0; i<project_count; i++ )); do
   # fi
   kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
   wait
+
+  if [[ "$project_name" == "mongodb" ]]; then
+    mv 7-mongodb-deployment-tls-config.yaml.bak 7-mongodb-deployment-tls-config.yaml
+    kubectl apply -f ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml
+    kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
+    kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
+    wait
+  fi
 
 done
 }
