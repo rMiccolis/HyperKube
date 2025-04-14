@@ -61,8 +61,12 @@ cat << EOF | sudo tee -a /etc/hosts > /dev/null
 $master_host_ip $master_host_name $load_balancer_dns_name
 EOF
 
+echo -e "${LBLUE}Exporting repository root directory...${WHITE}"
+export repository_root_dir=$(pwd)
+
 # export variables at login
 cat << EOF | tee -a /home/$USER/.profile > /dev/null
+export repository_root_dir=$repository_root_dir
 export noip_username=$noip_username
 export noip_password=$noip_password
 export kubernetes_version=$kubernetes_version
@@ -130,9 +134,6 @@ for h in "${printable_hosts[@]}"; do
 echo -e "${LPURPLE}$h${WHITE}"
 done
 echo -e "${LPURPLE}----------------${WHITE}"
-
-echo -e "${LBLUE}Exporting repository root directory...${WHITE}"
-export repository_root_dir=$(pwd)
 
 echo -e "${LBLUE}Adding github to the list of known_hosts addresses${WHITE}"
 ssh-keyscan github.com >> ~/.ssh/known_hosts

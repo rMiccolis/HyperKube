@@ -41,18 +41,34 @@ fi
 start_app(){
   project_repository=$1
   branch=$2
+  exec_script_before_deploy=$3
+  exec_script_after_deploy=$4
   app_names=()
   # cloning apps to run on k8s and use "envsubst_preserve_empty_variables() on each k8s file"
   IFS='/' read -r -a app_names <<< $project_repository
   project_name=$(echo ${app_names[4]} | grep -oP '.*(?=\.git)')
   # echo -e "${LBLUE}Starting $project_name${WHITE}"
   git clone --single-branch --branch $branch $project_repository
+  chmod u+x -R $project_name
+  if [[ "$exec_script_before_deploy" != "false" ]]; then
+    kubectl create namespace $namespace
+    ./$project_name/bin/${exec_script_before_deploy}
+  fi
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
     echo "calling envsubst_preserve_empty_variables on: $file_name"
     envsubst_preserve_empty_variables $file_name
     # apply each configuration yaml file with kubernetes
     kubectl apply -f $file_name
+    # wait for resources to be ready
+    kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
+    kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
+    wait
+
+    if [[ "$exec_script_after_deploy" != "false" ]]; then
+      kubectl create namespace $namespace
+      ./$project_name/bin/${exec_script_after_deploy}
+    fi
   done
 }
 
@@ -74,13 +90,10 @@ for (( i=0; i<project_count; i++ )); do
   namespace=$(yq ".projects[$i].namespace" "$variables_file")
   github_repo=$(yq ".projects[$i].github_repo" "$variables_file")
   branch=$(yq ".projects[$i].branch // \"master\"" "$variables_file")
+  exec_script_before_deploy=$(yq ".projects[$i].exec_script_before_deploy // \"false\"" "$variables_file")
+  exec_script_after_deploy=$(yq ".projects[$i].exec_script_after_deploy // \"false\"" "$variables_file")
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
-
-  if [[ "$project_name" == "mongodb" ]]; then
-      kubectl create namespace $namespace
-      apply_tls_certificate
-  fi
 
   # open tcp port on nginx helm installation
   if [[ "$port" != "false" ]]; then
@@ -104,7 +117,7 @@ for (( i=0; i<project_count; i++ )); do
 
   # start application:
   echo -e "${LBLUE}Starting application $project_name...${WHITE}"
-  start_app $github_repo $branch
+  start_app $github_repo $branch $exec_script_before_deploy $exec_script_after_deploy
 
   # wait for app to be ready
   kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
@@ -121,45 +134,7 @@ for (( i=0; i<project_count; i++ )); do
   kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
   wait
 
-  if [[ "$project_name" == "mongodb" ]]; then
-    mv ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml.bak ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml
-    kubectl apply -f ./$project_name/kubernetes/7-mongodb-deployment-tls-config.yaml
-    kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
-    kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
-    wait
-  fi
-
 done
-}
-
-apply_tls_certificate(){
-  # setting variables for tls certificate
-  KEY_FILE='cluster-key-cert.key'
-  CERT_FILE='cluster-filecert.crt'
-  HOST="$app_server_addr"
-  cert_file_name='tls-cert'
-  # create a certificate for https protocol
-  openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ${KEY_FILE} -out ${CERT_FILE} -subj "/CN=${HOST}/O=${HOST}" -addext "subjectAltName = DNS:${HOST}"
-  # creating tls certificate in 'default' namespace
-
-  # create a tls.pem file from combination of $CERT_FILE and $KEY_FILE
-  cat $KEY_FILE $CERT_FILE > tls.pem
-  # kubectl create secret tls $cert_file_name --key ${KEY_FILE} --cert ${CERT_FILE} -n mongodb
-  kubectl create secret generic tls-cert --from-file=tls.crt=tls.pem -n mongodb
-
-
-  # create mongod.conf file to tell mongodb to use it for configuration (it contains tls certificates)
-cat << EOF | sudo tee /home/$USER/mongod.conf > /dev/null
-net:
-  port: 27017
-  bindIp: 0.0.0.0
-  tls:
-    mode: requireTLS
-    certificateKeyFile: /etc/mongodb/tls/tls.crt
-    CAFile: /etc/mongodb/tls/tls.crt # i pass the same file as 'certificateKeyFile' because the certificate is self signed
-    allowConnectionsWithoutCertificates: false # Recommended for security
-EOF
-  kubectl create configmap mongodb-config --from-file=/home/$USER/mongod.conf -n mongodb
 }
 
 mkdir apps
