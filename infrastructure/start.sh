@@ -126,7 +126,7 @@ kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=3000s &
 wait
 
 kubectl -n kube-system rollout restart deployment coredns
-
+kubectl rollout status deployment coredns -n kube-system rollout --timeout=3000s > /dev/null 2>&1
 kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=3000s &
 wait
 
