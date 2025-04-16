@@ -61,7 +61,7 @@ export config_file_path=$config_file_path
 . ./HyperKube/bin/prepare_environment.sh
 
 echo -e "${LGREEN}Genereting tls .pem file inside $repository_root_dir/tls/tls-cert.pem:${WHITE}"
-./generate_tls_cert.sh
+./HyperKube/bin/generate_tls_cert.sh
 
 cd /home/$USER/
 echo -e "${LGREEN}Starting phase 2 / 10 ===> Setting up host settings and dependencies: $(hostname -I)${WHITE}"
