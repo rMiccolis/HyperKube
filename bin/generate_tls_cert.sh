@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir $repository_root_dir/tls
+
 # setting variables for tls certificate
 KEY_FILE="tls-cert.key"
 CERT_FILE="tls-cert.crt"
