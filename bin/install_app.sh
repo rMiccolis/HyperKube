@@ -51,8 +51,8 @@ start_app(){
   git clone --single-branch --branch $branch $project_repository
   chmod u+x -R $project_name
   if [[ "$exec_script_before_deploy" != "false" ]]; then
-    echo "Calling ./$project_name/bin/${exec_script_before_deploy}"
-    ./$project_name/bin/${exec_script_before_deploy}
+    echo "Calling ./$project_name/${exec_script_before_deploy}"
+    ./$project_name/${exec_script_before_deploy}
   fi
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
@@ -66,8 +66,8 @@ start_app(){
     kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
     wait
   if [[ "$exec_script_after_deploy" != "false" ]]; then
-    echo "Calling ./$project_name/bin/${exec_script_after_deploy}"
-    ./$project_name/bin/${exec_script_after_deploy}
+    echo "Calling ./$project_name/${exec_script_after_deploy}"
+    ./$project_name/${exec_script_after_deploy}
   fi
 }
 
