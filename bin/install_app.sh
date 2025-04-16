@@ -94,6 +94,11 @@ for (( i=0; i<project_count; i++ )); do
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
 
+  # remove the first "/" from path
+  exec_script_before_deploy="${exec_script_before_deploy#/}"
+  # remove the first "/" from path
+  exec_script_after_deploy="${exec_script_after_deploy#/}"
+
   # create project namespace
   kubectl create namespace $namespace
 
