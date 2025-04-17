@@ -119,6 +119,8 @@ kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=2000s &
 wait
 echo -e "${LGREEN}cert-manager installed ===> Operation Done!${WHITE}"
 
+. /home/$USER/.profile
+
 echo -e "${LGREEN}Starting phase 10 / 10 ===> Applying configuration file and deployng the application to the cluster${WHITE}"
 ./HyperKube/bin/install_app.sh
 echo -e "${LGREEN}Phase 10 / 10 ===> Operation Done!${WHITE}"

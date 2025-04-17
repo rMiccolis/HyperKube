@@ -52,6 +52,7 @@ start_app(){
   chmod u+x -R $project_name
   if [[ "$exec_script_before_deploy" != "false" ]]; then
     echo "Calling ./$project_name/${exec_script_before_deploy}"
+    . /home/$USER/.profile
     ./$project_name/${exec_script_before_deploy}
   fi
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
@@ -67,6 +68,7 @@ start_app(){
     wait
   if [[ "$exec_script_after_deploy" != "false" ]]; then
     echo "Calling ./$project_name/${exec_script_after_deploy}"
+    . /home/$USER/.profile
     ./$project_name/${exec_script_after_deploy}
   fi
 }
