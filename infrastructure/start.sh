@@ -42,7 +42,7 @@ sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd6
 
 valid_config=$(. /home/$USER/HyperKube/bin/apps_config_validator.sh /home/$USER/apps_config.yaml | echo $? )
 
-if [ "$valid_config" == "1" ]; exit 1; fi
+if [ "$valid_config" == "1" ]; then exit 1; fi
 
 echo -e "${LGREEN}Installing No-Ip Dynamic Update Client:${WHITE}"
 cd /home/$USER/
