@@ -85,5 +85,5 @@ The validation checks for:
 Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path) and even a set of parameters. [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy) can be used even as parameters to your scripts:
 
 ```yaml
-    exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
+exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
 ```
