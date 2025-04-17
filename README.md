@@ -39,12 +39,11 @@ There are 4 main scripts that create and configure all the infrastructure and ne
 - **➕ `bin/setup_worker_nodes.sh`:** This script is useful for joining a new node to the cluster (control plane or worker) and configuring it (install Docker, Kubernetes, etc.).
 - **🔗 `bin/add_wireguard_peer.sh`:** Run this script to generate a Wireguard peer configuration. It prints out the QR code to be scanned by Android or iOS apps to join the VPN.
 
-# 📚 FOR USAGE REFER TO: [usage.md](https://github.com/rMiccolis/HyperKube/blob/master/doc/usage.md)
+## 📚 FOR USAGE REFER TO: [usage.md](https://github.com/rMiccolis/HyperKube/blob/master/doc/usage.md)
 
+---
 
-___
-
-# Permissions:
+## Rights
 
 Copyright © 2025 Roberto Miccolis. Tutti i diritti riservati.
 

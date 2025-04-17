@@ -40,6 +40,10 @@ if [ -z "$config_file_path" ]; then usage; exit; fi
 echo -e "${LBLUE}Installing yq library to read and parse YAML files...${WHITE}"
 sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -q -O /usr/bin/yq > /dev/null && sudo chmod +x /usr/bin/yq > /dev/null
 
+valid_config=$(. /home/$USER/HyperKube/bin/app_config_validator.sh /home/$USER/app_yaml_variables.yaml | echo $? )
+
+if [ "$valid_config" == "1" ]; exit 1; fi
+
 echo -e "${LGREEN}Installing No-Ip Dynamic Update Client:${WHITE}"
 cd /home/$USER/
 ./HyperKube/bin/install_NOIP_duc.sh -c "$config_file_path"

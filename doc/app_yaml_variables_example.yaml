@@ -4,7 +4,8 @@ projects:
     port: 27017 # only to open port on nginx ingress-controller (not needed for standard ports like 80-443)
     service_name: mongodb # useful only if 'projects.port' is set
     github_repo: 'https://github.com/rMiccolis/mongodb.git'
-    deployment: 'true'
+    exec_script_before_deploy: 'bin/prepare_deploy.sh'
+    exec_script_after_deploy: 'bin/finalize_deploy.sh'
     env:
       - name: mongo_root_username
         value: mongodb_username
@@ -18,6 +19,7 @@ projects:
   - name: binance-bot
     github_repo: 'https://github.com/rMiccolis/binance-bot.git'
     namespace: binance-bot
+    exec_script_before_deploy: '/bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
     env:
       - name: docker_username
         value: your_username
