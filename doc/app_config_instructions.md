@@ -62,6 +62,8 @@ The validation checks for:
 
 ## Notes
 
+- **If a tls certificate (.pem file) is needed, "tls-cert.pem" file is generated inside /home/$USER/tls/** */
+
 - The GitHub repository is cloned automatically before deployment.
 
 - Environment variables marked with base64_encoding: 'true' will be encoded before being injected into Kubernetes secrets.
