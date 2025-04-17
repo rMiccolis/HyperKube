@@ -20,8 +20,8 @@ Each project in the projects list must include:
 
 - port:                         External port for ingress (e.g. 27017 for MongoDB)
 - service_name:                 Service name to use for the ingress route (required if port is specified)
-- exec_script_before_deploy:    Script to run before deploying the project (optional)
-- exec_script_after_deploy:     Script to run after deployment (optional)
+- exec_script_before_deploy:    Relative path to the script to run before deploying the project (optional). You can use a set of already defined environment variables in this script. It's even possible to use them as parameter of script inside 'exec_script_before_deploy'. [Example](#Example of execution of a script before deploying)
+- exec_script_after_deploy:     Relative path to the script to run after deployment (optional). You can use a set of already defined environment variables in this script. It's even possible to use them as parameter of script inside 'exec_script_after_deploy'. [Example](#Example of execution of a script before deploying)
 
 ## Environment Variables (env)
 
@@ -66,7 +66,7 @@ The validation checks for:
 
 - Environment variables marked with base64_encoding: 'true' will be encoded before being injected into Kubernetes secrets.
 
-## Variables usable inside exec_script_before_deploy/exec_script_after_deploy
+## Environment Variables usable inside exec_script_before_deploy/exec_script_after_deploy
 
 - repository_root_dir       => this is the /home/$USER/ folder
 - app_server_addr           => this is the IP address of your load balancer (your public IP)
@@ -79,3 +79,11 @@ The validation checks for:
 - github_branch_name        => the branch name of HyperKube project used
 - docker_username
 - docker_access_token
+
+### Example of execution of a script before deploying
+
+Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path) and even a set of parameters. [Environment Variables](#Environment Variables usable inside exec_script_before_deploy/exec_script_after_deploy) can be used even as parameters to your scripts:
+
+```yaml
+    exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
+```
