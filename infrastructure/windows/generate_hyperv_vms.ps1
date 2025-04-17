@@ -12,7 +12,7 @@ if (!(Get-Module -ListAvailable -Name powershell-yaml)) {
 
 # READ ALL CONFIGURATION KEYS
 Import-Module powershell-yaml
-$config=Get-Content $config_file_path | ConvertFrom-YAML
+$config=Get-Content $main_config_file_path | ConvertFrom-YAML
 
 # Set the ssh folder where there are all the ssh key pairs
 $ssh_path = "$HOME\.ssh"
