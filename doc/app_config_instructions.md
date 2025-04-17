@@ -1,6 +1,6 @@
 # Instructions to generate a correct apps_config.yaml configuration
 
-You can find an example of apps_config.yaml file [HERE](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config_instructions.md)
+You can find an example of apps_config.yaml file [HERE](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md)
 
 ## Required Fields
 
