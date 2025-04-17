@@ -8,7 +8,7 @@ usage(){
   echo " This script manages the control plane(s) and worker nodes: creates and adds them to the cluster"
   echo ""
   echo "Usage:"
-  echo "  $0 -c '/path/to/the/main_config.yaml' => see the main_config.example.yaml in the root directory for an example"
+  echo "  $0 -c '/path/to/the/main_config.yaml' => see the app_config_example.yaml in the root directory for an example"
   echo ""
   echo "Options:"
   echo "  -c argument : the path to the main_config.yaml file"
@@ -40,7 +40,7 @@ if [ -z "$config_file_path" ]; then usage; exit; fi
 echo -e "${LBLUE}Installing yq library to read and parse YAML files...${WHITE}"
 sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -q -O /usr/bin/yq > /dev/null && sudo chmod +x /usr/bin/yq > /dev/null
 
-valid_config=$(. /home/$USER/HyperKube/bin/app_config_validator.sh /home/$USER/app_yaml_variables.yaml | echo $? )
+valid_config=$(. /home/$USER/HyperKube/bin/app_config_validator.sh /home/$USER/app_config.yaml | echo $? )
 
 if [ "$valid_config" == "1" ]; exit 1; fi
 

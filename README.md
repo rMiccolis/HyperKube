@@ -30,7 +30,7 @@ By abstracting away the complexities of manual setup and configuration, the proj
 
 ---
 
-There are 4 main scripts that create and configure all the infrastructure and need a configuration yaml file (`main_config.yaml`) to be executed (an example is found at `main_config.example.yaml`).
+There are 4 main scripts that create and configure all the infrastructure and need a configuration yaml file (`main_config.yaml`) to be executed (an example is found at `app_config_example.yaml`).
 
 **📜 Script Description:**
 

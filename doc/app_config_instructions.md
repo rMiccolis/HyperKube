@@ -1,4 +1,6 @@
-# Instructions to generate a correct app_yaml_variables.yaml configuration
+# Instructions to generate a correct app_config.yaml configuration
+
+You can find an example of app_config.yaml file [HERE](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md)
 
 ## Required Fields
 
@@ -47,7 +49,7 @@ env:
 You can use the included ./bin/app_config_validator.sh script to check the structure of your projects.yaml file:
 
 ```yaml
-. ./bin/app_config_validator.sh /home/$USER/app_yaml_variables.yaml
+. ./bin/app_config_validator.sh /home/$USER/app_config.yaml
 ```
 
 The validation checks for:

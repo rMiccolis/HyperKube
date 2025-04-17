@@ -217,7 +217,7 @@ write_files:
  - encoding: b64
    owner: $($host_user):$($host_user)
    content: $($encoded_app_yaml_variables)
-   path: /home/$($host_user)/app_yaml_variables.yaml
+   path: /home/$($host_user)/app_config.yaml
    permissions: '0777'
    defer: true
  - encoding: b64

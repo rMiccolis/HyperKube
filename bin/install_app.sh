@@ -73,9 +73,9 @@ start_app(){
   fi
 }
 
-# function that reads variables to export as env variables from app_yaml_variables.yaml file.
+# function that reads variables to export as env variables from app_config.yaml file.
 read_env_var_from_config_and_start_app() {
-variables_file="/home/$USER/app_yaml_variables.yaml"
+variables_file="/home/$USER/app_config.yaml"
 
 # Get the number of projects
 project_count=$(yq '.projects | length' "$variables_file")
