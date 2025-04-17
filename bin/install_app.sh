@@ -94,10 +94,10 @@ for (( i=0; i<project_count; i++ )); do
   port=$(yq ".projects[$i].port // \"false\"" "$variables_file")
   service_name=$(yq ".projects[$i].service_name // \"$project_name\"" "$variables_file")
 
-  # remove the first "/" from path
-  exec_script_before_deploy="${exec_script_before_deploy#/}"
-  # remove the first "/" from path
-  exec_script_after_deploy="${exec_script_after_deploy#/}"
+  # remove the first "/" from path and substitute env vars inside
+  exec_script_before_deploy=$(echo "${exec_script_before_deploy#/}" | envsubst)
+  # remove the first "/" from path and substitute env vars inside
+  exec_script_after_deploy=$(echo "${exec_script_after_deploy#/}" | envsubst)
 
   # create project namespace
   kubectl create namespace $namespace
@@ -124,7 +124,7 @@ for (( i=0; i<project_count; i++ )); do
 
   # start application:
   echo -e "${LBLUE}Starting application $project_name...${WHITE}"
-  start_app $github_repo $branch $exec_script_before_deploy $exec_script_after_deploy
+  start_app $github_repo $branch "$exec_script_before_deploy" "$exec_script_after_deploy"
 
   # wait for app to be ready
   kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
