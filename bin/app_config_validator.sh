@@ -15,7 +15,7 @@ fi
 
 echo " Found $project_count projects. Starting validation..."
 
-valid=true
+valid="true"
 
 for i in $(seq 0 $((project_count - 1))); do
   name=$(yq ".projects[$i].name" "$YAML_FILE")
@@ -29,13 +29,13 @@ for i in $(seq 0 $((project_count - 1))); do
   # Required fields check
   if [[ "$name" == "null" || "$namespace" == "null" || "$repo" == "null" ]]; then
     echo "  Error: missing one or more required fields (name, namespace, github_repo)"
-    valid=false
+    valid="false"
   fi
 
   # If 'port' is defined, 'service_name' must be too
   if [[ "$port" != "null" && "$service_name" == "null" ]]; then
     echo "  Error: 'port' is defined but 'service_name' is missing"
-    valid=false
+    valid="false"
   fi
 
   # Validate environment variables
@@ -46,7 +46,7 @@ for i in $(seq 0 $((project_count - 1))); do
       env_value=$(yq ".projects[$i].env[$j].value" "$YAML_FILE")
       if [[ "$env_name" == "null" || "$env_value" == "null" ]]; then
         echo "  Error in env[$j]: 'name' or 'value' is missing"
-        valid=false
+        valid="false"
       fi
     done
   fi

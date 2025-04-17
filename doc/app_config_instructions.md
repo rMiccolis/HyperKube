@@ -62,7 +62,7 @@ The validation checks for:
 
 - The GitHub repository is cloned automatically before deployment.
 
-- Environment variables marked with base64_encoding: 'true' will be encoded before being injected into Kubernetes secrets
+- Environment variables marked with base64_encoding: 'true' will be encoded before being injected into Kubernetes secrets.
 
 ## Variables usable inside exec_script_before_deploy/exec_script_after_deploy
 
