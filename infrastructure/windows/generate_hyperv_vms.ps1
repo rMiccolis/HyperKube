@@ -1,6 +1,6 @@
 param(
-[string]$config_file_path,
-[string]$app_yaml_variables
+[string]$main_config_file_path,
+[string]$apps_config_file_path
 )
 
 # Install NuGet to download and install powershell-yaml to read and parse yaml files
@@ -153,9 +153,9 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
 
 
         # Encode the main_config.yaml content into base64 (we'll use it to feed cloud-init)
-        $app_yaml_variables = Get-Content $app_yaml_variables -Raw
-        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($app_yaml_variables)
-        $encoded_app_yaml_variables = [System.Convert]::ToBase64String($encodedBytes)
+        $apps_config_file_path = Get-Content $apps_config_file_path -Raw
+        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($apps_config_file_path)
+        $encoded_apps_config_file = [System.Convert]::ToBase64String($encodedBytes)
     }
 
     # Set VM Name
@@ -216,8 +216,8 @@ write_files:
    defer: true
  - encoding: b64
    owner: $($host_user):$($host_user)
-   content: $($encoded_app_yaml_variables)
-   path: /home/$($host_user)/app_config.yaml
+   content: $($encoded_apps_config_file)
+   path: /home/$($host_user)/apps_config.yaml
    permissions: '0777'
    defer: true
  - encoding: b64
