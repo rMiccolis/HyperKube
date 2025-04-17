@@ -44,11 +44,12 @@ TO LET THIS SCRIPT WORK, YOU **MUST**:
 - **PICK A CLOUD-IMAGE ISO FOR YOUR LINUX DISTRO (ex: [focal-server-cloudimg-amd64 download link](https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img) )**
 - have the ssh key pairs of the host you're launching all the infrastructure from (used to access and setup all other hosts. The host is your host that has access to github repo and from which the script will be launched) at the default path C:\Users\USERNAME\\.ssh\ . This key must have access to github repository
 
-Launch generate_hyperv_vms.ps1:
-Input parameter:
+### Launch generate_hyperv_vms.ps1:
 
-- [main_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml) => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application. Example
-- [apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml) => This is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order).
+Input parameters:
+
+- [main_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml) => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application.
+- [apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml) ([instructions](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md)) => FThis is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order).
 
 ```powershell
 powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -main_config_file_path "E:\Download\main_config.yaml" -apps_config_file_path "E:\Download\apps_config.yaml"
