@@ -147,7 +147,7 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
     if ($all_hosts[$i] -eq $config.master_host) {
         $master_host_name = $host_user
         $master_host_ip = $host_ip
-        $main_config_content = Get-Content $config_file_path -Raw
+        $main_config_content = Get-Content $main_config_file_path -Raw
         $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($main_config_content)
         $encoded_main_config_content = [System.Convert]::ToBase64String($encodedBytes)
 
