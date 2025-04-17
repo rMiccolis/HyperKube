@@ -51,7 +51,7 @@ Input parameter:
 - apps_config_file_path => This is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order). Example [HERE](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml)
 
 ```powershell
-powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -main_config_file_path "E:\Download\main_config.yaml" -apps_config "E:\Download\apps_config.yaml"
+powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -main_config_file_path "E:\Download\main_config.yaml" -apps_config_file_path "E:\Download\apps_config.yaml"
 ```
 
 ___
