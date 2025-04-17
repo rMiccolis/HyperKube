@@ -15,7 +15,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: test@hotmail.it
+    email: $email
     privateKeySecretRef:
       name: letsencrypt-certificate
     solvers:

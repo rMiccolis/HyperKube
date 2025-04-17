@@ -31,6 +31,7 @@ export load_balancer_dns_name=$(yq '.load_balancer_dns_name' $config_file_path)
 export github_branch_name=$(yq '.github_branch_name' $config_file_path)
 export docker_username=$(yq '.docker_username' $config_file_path)
 export docker_access_token=$(yq '.docker_access_token' $config_file_path)
+export email=$(yq '.email' $config_file_path)
 #exporting host list as a string (so it can be exported as variable and read by other scripts)
 export host_list="$(yq '.hosts[]' $config_file_path)"
 
@@ -85,6 +86,7 @@ export load_balancer_dns_name=$load_balancer_dns_name
 export github_branch_name=$github_branch_name
 export docker_username=$docker_username
 export docker_access_token=$docker_access_token
+export email=$email
 export BLACK="\033[0;30m"
 export DARK_GREY="\033[1;30m"
 export RED="\033[0;31m"
