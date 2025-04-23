@@ -43,8 +43,8 @@ There are 4 main scripts that create and configure all the infrastructure and ne
 
 ---
 
-## Copyright
+## License
 
-Copyright © 2025 Roberto Miccolis. All rights reserved.
+This project is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-This repository contains the source code for the HyperKube application. All intellectual property rights are reserved by Roberto Miccolis. Use, copying, modification, or distribution of this code for commercial or non-personal purposes is prohibited without explicit permission.
+See the [LICENSE](https://github.com/rMiccolis/HyperKube/blob/master/LICENSE) file for complete details.
