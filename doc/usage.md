@@ -10,14 +10,15 @@
 - Cri-dockerd version: 0.3.17 (scritps always try to install latest version)
 - Kubernetes version: v1.32.3 (scritps always try to install latest version)
 
-⚠️ After creating VM with a linux distro: (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
+⚠️ After creating VM with a linux distro:
+    (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
 
 - Disable windows secure boot
 - Set minimum 50GB of disk space
 - Set at least 2 cpus
 - Set at least 4096MB of RAM
 
-## Mandatory OS OPerations before executing './infrastructure/start.sh' (follow these steps in the example paragraph)
+## Mandatory OS Operations before executing './infrastructure/start.sh' (follow these steps in the example paragraph)
 
 - **🐧 Choose a linux distro which makes use of systemd as init service**
 - **💻 Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list =>  00 15 5D 38 01 30,  00 15 5D 38 01 31,  00 15 5D 38 01 32...)
