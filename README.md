@@ -43,8 +43,8 @@ There are 4 main scripts that create and configure all the infrastructure and ne
 
 ---
 
-## Rights
+## Copyright
 
-Copyright © 2025 Roberto Miccolis. Tutti i diritti riservati.
+Copyright © 2025 Roberto Miccolis. All rights reserved.
 
-Questo repository contiene il codice sorgente dell'applicazione HyperKube. Tutti i diritti di proprietà intellettuale sono riservati a Roberto Miccolis. L'utilizzo, la copia, la modifica o la distribuzione di questo codice per scopi commerciali o non personali sono vietati senza esplicita autorizzazione.
+This repository contains the source code for the HyperKube application. All intellectual property rights are reserved by Roberto Miccolis. Use, copying, modification, or distribution of this code for commercial or non-personal purposes is prohibited without explicit permission.
