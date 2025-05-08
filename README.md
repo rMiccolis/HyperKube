@@ -49,4 +49,4 @@ There are 4 main scripts that create and configure all the infrastructure and ne
 
 This project is released under the [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.html).
 
-See the [LICENSE](https://github.com/rMiccolis/HyperKube/blob/master/LICENSE) file for complete details.
+See the [LICENSE](https://github.com/rMiccolis/HyperKube/blob/master/COPYING) file for complete details.
