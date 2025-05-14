@@ -50,6 +50,14 @@ start_app(){
   # echo -e "${LBLUE}Starting $project_name${WHITE}"
   git clone --single-branch --branch $branch $project_repository
   chmod u+x -R $project_name
+
+  # do the same work on the entire utils folder if present
+  utils_files=($(ls ./$project_name/utils/* | sort))
+  for file_name in "${utils_files[@]}"; do
+    echo "calling envsubst_preserve_empty_variables on: $file_name"
+    envsubst_preserve_empty_variables $file_name
+  done
+
   if [[ "$exec_script_before_deploy" != "false" ]]; then
     echo "Calling ./$project_name/${exec_script_before_deploy}"
     . /home/$USER/.profile
@@ -63,12 +71,6 @@ start_app(){
     kubectl apply -f $file_name
   done
 
-  # do the same work on the entire utils folder if present
-  utils_files=($(ls ./$project_name/utils/* | sort))
-  for file_name in "${utils_files[@]}"; do
-    echo "calling envsubst_preserve_empty_variables on: $file_name"
-    envsubst_preserve_empty_variables $file_name
-  done
   # wait for resources to be ready
   kubectl rollout status deployment $project_name -n $namespace --timeout=3000s > /dev/null 2>&1
   kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
