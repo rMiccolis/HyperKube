@@ -85,6 +85,7 @@ The validation checks for:
 You can use all these variables + all the variables you provided inside project.env inside apps_config.yaml in the form of ${var} or $var
 
 **Important**: All variables inside your project "env_subsitution" folder files, in the format of ${var} or $var, will be subsituted with the value of the environment variables written up.
+This operation is performed **BEFORE** the execution of exec_script_before_deploy and exec_script_after_deploy!
 Example: if there is a values.yaml with a row like: path: ${repository_root_dir}, it will be substituted with: path: /home/$USER
 
 ### Example of execution of a script before deploying
