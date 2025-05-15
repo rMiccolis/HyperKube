@@ -57,7 +57,7 @@ Input parameters:
 In your project you have to provide a "kubernetes" folder with all the .yaml files needed to install the application.
 In addition you can have:
 
-- env_substitution folder: here you can place all the files containing variables to be substituted (in the form of ${var} or $var). See [Environment Variables usable inside exec_script_before_deploy or exec_script_after_deploy and env_subsitution folder](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy-and-env_subsitution-folder)
+- env_substitution folder: here you can place all the files containing variables to be substituted (in the form of ${var} or $var). See [Environment Variables usable inside exec_script_before_deploy or exec_script_after_deploy and env_subsitution folder](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy)
 - "bin" folder: here you can have 2 .sh files, one for preparing deploy (edit .yaml files or create secrets or other resources) that is executed before applying kubernetes' folder files and one executed after this.
 
 ```powershell
