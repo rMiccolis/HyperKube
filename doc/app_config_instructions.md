@@ -68,7 +68,7 @@ The validation checks for:
 
 - Environment variables marked with base64_encoding: 'true' will be encoded before being injected into Kubernetes secrets.
 
-## Environment Variables usable inside exec_script_before_deploy or exec_script_after_deploy
+## Environment Variables usable inside exec_script_before_deploy or exec_script_after_deploy and env_subsitution folder
 
 - repository_root_dir       => this is the /home/$USER folder
 - app_server_addr           => this is the IP address of your load balancer (your public IP)
@@ -89,7 +89,7 @@ Example: if there is a values.yaml with a row like: path: ${repository_root_dir}
 
 ### Example of execution of a script before deploying
 
-Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path, feel free to choose the file name) and even a set of parameters. [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy) can be used even as parameters to your scripts:
+Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path, feel free to choose the file name) and even a set of parameters. [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy-and-env_subsitution-folder) can be used even as parameters to your scripts:
 
 ```yaml
 exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
