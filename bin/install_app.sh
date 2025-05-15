@@ -52,11 +52,13 @@ start_app(){
   chmod u+x -R $project_name
 
   # do the same work on the entire env_subsitution folder if present
-  env_subsitution_files=($(ls ./$project_name/env_subsitution/* | sort))
-  for file_name in "${env_subsitution_files[@]}"; do
-    echo "calling envsubst_preserve_empty_variables on: $file_name"
-    envsubst_preserve_empty_variables $file_name
-  done
+  if [ -d "./$project_name/env_subsitution" ]; then
+    env_subsitution_files=($(ls ./$project_name/env_subsitution/* | sort))
+    for file_name in "${env_subsitution_files[@]}"; do
+      echo "calling envsubst_preserve_empty_variables on: $file_name"
+      envsubst_preserve_empty_variables $file_name
+    done
+  else
 
   if [[ "$exec_script_before_deploy" != "false" ]]; then
     echo "Calling ./$project_name/${exec_script_before_deploy}"
