@@ -51,9 +51,9 @@ start_app(){
   git clone --single-branch --branch $branch $project_repository
   chmod u+x -R $project_name
 
-  # do the same work on the entire utils folder if present
-  utils_files=($(ls ./$project_name/utils/* | sort))
-  for file_name in "${utils_files[@]}"; do
+  # do the same work on the entire env_subsitution folder if present
+  env_subsitution_files=($(ls ./$project_name/env_subsitution/* | sort))
+  for file_name in "${env_subsitution_files[@]}"; do
     echo "calling envsubst_preserve_empty_variables on: $file_name"
     envsubst_preserve_empty_variables $file_name
   done

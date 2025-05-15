@@ -70,7 +70,7 @@ The validation checks for:
 
 ## Environment Variables usable inside exec_script_before_deploy or exec_script_after_deploy
 
-- repository_root_dir       => this is the /home/$USER/ folder
+- repository_root_dir       => this is the /home/$USER folder
 - app_server_addr           => this is the IP address of your load balancer (your public IP)
 - application_dns_name      => this is the dns name of your public IP (your_dns.com)
 - master_host_ip_eth0       => the master host IP in eth0 interface
@@ -82,9 +82,14 @@ The validation checks for:
 - docker_username
 - docker_access_token
 
+You can use all these variables + all the variables you provided inside project.env inside apps_config.yaml in the form of ${var} or $var
+
+**Important**: All variables inside your project "env_subsitution" folder files, in the format of ${var} or $var, will be subsituted with the value of the environment variables written up.
+Example: if there is a values.yaml with a row like: path: ${repository_root_dir}, it will be substituted with: path: /home/$USER
+
 ### Example of execution of a script before deploying
 
-Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path) and even a set of parameters. [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy) can be used even as parameters to your scripts:
+Here you can enter the path of the script to be executed (bin/build.sh or /bin/build.sh, just the relative path, feel free to choose the file name) and even a set of parameters. [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy) can be used even as parameters to your scripts:
 
 ```yaml
 exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
