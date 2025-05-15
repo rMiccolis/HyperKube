@@ -58,13 +58,8 @@ start_app(){
       echo "calling envsubst_preserve_empty_variables on: $file_name"
       envsubst_preserve_empty_variables $file_name
     done
-  else
-
-  if [[ "$exec_script_before_deploy" != "false" ]]; then
-    echo "Calling ./$project_name/${exec_script_before_deploy}"
-    . /home/$USER/.profile
-    ./$project_name/${exec_script_before_deploy}
   fi
+
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
     echo "calling envsubst_preserve_empty_variables on: $file_name"
