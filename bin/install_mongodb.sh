@@ -47,7 +47,7 @@ kubectl -n mongodb create secret generic mongodb-ca-secret \
 
 helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -n mongodb -f /home/$USER/mongodb_values.yaml
 
-kubectl rollout status deployment mongodb -n $namespace --timeout=3000s > /dev/null 2>&1
+kubectl rollout status deployment mongodb -n mongodb --timeout=3000s > /dev/null 2>&1
 kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=3000s &
 wait
 
