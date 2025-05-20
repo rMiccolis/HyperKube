@@ -41,5 +41,6 @@ To maintain consistent networking:
 
 **Set static IPs for each VM on your router**, using MAC address mapping
   Ex:
-  - MAC_ADDRESS: 00:15:5D:38:01:30 → IP: 192.168.1.200 (master)
-  - MAC_ADDRESS: 00:15:5D:38:01:31 → IP: 192.168.1.201 (worker1)
+
+- MAC_ADDRESS: 00:15:5D:38:01:30 → IP: 192.168.1.200 (master)
+- MAC_ADDRESS: 00:15:5D:38:01:31 → IP: 192.168.1.201 (worker1)

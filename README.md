@@ -16,6 +16,7 @@ The automation extends to the deployment and configuration of critical network a
 - **📦 Helm:** A Kubernetes package manager for simplifying the installation and management of applications.
 - **🚦 Nginx Ingress Controller:** Managing external access to applications running within the Kubernetes cluster.
 - **🔒 cert-manager:** Automating the acquisition and renewal of Let's Encrypt SSL certificates for secure HTTPS connections.
+- **💾 MongoDB:** An optional MongoDB instance ready to be used by other apps. See [main_config_example](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml) for info on how to deploy it.
 
 Furthermore, the project facilitates the deployment of user-defined applications by cloning project repositories and installing them onto the Kubernetes cluster based on provided YAML configurations. It even supports variable substitution within these configuration files, allowing for environment-specific settings.
 
