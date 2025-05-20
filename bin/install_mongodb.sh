@@ -48,6 +48,8 @@ kubectl -n mongodb create secret generic mongodb-ca-secret \
     --from-file=mongodb-ca-cert=$repository_root_dir/tls/mongodb/mongodb-ca-cert.pem \
     --from-file=mongodb-ca-key=$repository_root_dir/tls/mongodb/mongodb-ca-key.pem
 
+kubectl apply -f $repository_root_dir/HyperKube/kubernetes/mongodb
+
 helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -n mongodb -f /home/$USER/mongodb_values.yaml
 
 kubectl rollout status deployment mongodb -n mongodb --timeout=3000s > /dev/null 2>&1
