@@ -14,6 +14,11 @@ kubectl create namespace mongodb
 export mongo_root_username=$(yq '.mongo_root_username' $config_file_path)
 export mongo_root_password=$(yq '.mongo_root_password' $config_file_path)
 
+# open 27017 port for mongodb on nginx
+helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --set tcp.27017="mongodb/mongodb:27017" --set controller.progressDeadlineSeconds=120
+kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=3000s &
+wait
+
 # generate default mongodb_values.yaml
 cat << EOF | tee -a /home/$USER/mongodb_values.yaml > /dev/null
 architecture: standalone
