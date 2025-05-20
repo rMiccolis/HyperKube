@@ -125,6 +125,13 @@ echo -e "${LGREEN}cert-manager installed ===> Operation Done!${WHITE}"
 
 . /home/$USER/.profile
 
+export install_default_mongodb=$(yq '.install_default_mongodb' $config_file_path)
+if [[ -v install_default_mongodb && "$install_default_mongodb" == "true" ]]; then
+echo -e "${LGREEN}Installing default MongoDB instance${WHITE}"
+./HyperKube/bin/install_mongodb.sh
+echo -e "${LGREEN}MongoDB installed!${WHITE}"
+fi
+
 echo -e "${LGREEN}Starting phase 10 / 10 ===> Applying configuration file and deployng the application to the cluster${WHITE}"
 ./HyperKube/bin/install_app.sh
 echo -e "${LGREEN}Phase 10 / 10 ===> Operation Done!${WHITE}"
