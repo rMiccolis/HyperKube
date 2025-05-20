@@ -7,6 +7,9 @@
 KEY_FILE="tls-cert.key"
 CERT_FILE="mongodb.pem"
 
+# create mongodb namespace
+kubectl create namespace mongodb
+
 . /home/$USER/.profile
 export mongo_root_username=$(yq '.mongo_root_username' $config_file_path)
 export mongo_root_password=$(yq '.mongo_root_password' $config_file_path)
