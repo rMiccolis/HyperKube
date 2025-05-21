@@ -242,12 +242,12 @@ users:
    groups: [adm, audio, cdrom, dialout, floppy, video, plugdev, dip, netdev, sudo, users, admin, lxd]
    shell: /bin/bash
    sudo: ['ALL=(ALL) NOPASSWD:ALL']
-   ssh-authorized-keys:
+   ssh_authorized_keys:
    - $($pub_key)
 keyboard:
    layout: us
 bootcmd:
- - "mkdir /home/$USER/user_custom_scripts"
+ - "mkdir -p /home/$($host_user)/user_custom_scripts"
 write_files:
  - encoding: b64
    owner: $($host_user):$($host_user)
