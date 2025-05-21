@@ -27,6 +27,7 @@ kubectl -n mongodb create secret generic mongodb-ca-secret \
     --from-file=mongodb-ca-cert=$repository_root_dir/tls/mongodb/mongodb-ca-cert.pem \
     --from-file=mongodb-ca-key=$repository_root_dir/tls/mongodb/mongodb-ca-key.pem
 
+# if a custom mongodb setup file (in .sh format) is provided then strip it (convert to unix format) and then execute it
 if [[ "$custom_mongodb_setup" == "true" ]]; then
   dos2unix $repository_root_dir/user_custom_scripts/mongodb_setup.sh
   . $repository_root_dir/user_custom_scripts/mongodb_setup.sh

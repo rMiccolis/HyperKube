@@ -130,17 +130,17 @@ wait
 echo -e "${LGREEN}cert-manager installed ===> Operation Done!${WHITE}"
 
 . /home/$USER/.profile
-. ./HyperKube/bin/export_colors.sh
+. /home/$USER/HyperKube/bin/export_colors.sh
 
 export install_mongodb=$(yq ".install_mongodb // \"false\"" $config_file_path)
 export custom_mongodb_setup=$(yq ".custom_mongodb_setup // \"false\"" "$config_file_path")
 if [[ "$install_mongodb" == "true" ]]; then
-  echo -e "${LGREEN}Installing default MongoDB instance${WHITE}"
+  echo -e "${LGREEN}Installing MongoDB instance${WHITE}"
   ./HyperKube/bin/install_mongodb.sh
   echo -e "${LGREEN}MongoDB installed!${WHITE}"
 fi
 
-echo -e "${LGREEN}Starting phase 10 / 10 ===> Applying configuration file and deployng the application to the cluster${WHITE}"
+echo -e "${LGREEN}Starting phase 10 / 10 ===> Applying configuration file and deploying the application to the cluster${WHITE}"
 ./HyperKube/bin/install_app.sh
 echo -e "${LGREEN}Phase 10 / 10 ===> Operation Done!${WHITE}"
 
