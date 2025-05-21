@@ -30,6 +30,7 @@ kubectl -n mongodb create secret generic mongodb-ca-secret \
 # if a custom mongodb setup file (in .sh format) is provided then strip it (convert to unix format) and then execute it
 if [[ "$custom_mongodb_setup" == "true" ]]; then
   dos2unix $repository_root_dir/user_custom_scripts/mongodb_setup.sh
+  echo -e "${LPURPLE}Calling $repository_root_dir/user_custom_scripts/mongodb_setup.sh...${WHITE}"
   . $repository_root_dir/user_custom_scripts/mongodb_setup.sh
 else
   kubectl apply -f $repository_root_dir/HyperKube/kubernetes/mongodb
