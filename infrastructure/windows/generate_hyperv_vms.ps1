@@ -196,7 +196,7 @@ volumePermissions:
   enabled: true
 "@
         } else {
-            $mongodb_values_content = Get-Content $mongodb_values_content -Raw
+            $mongodb_values_content = Get-Content $mongodb_values_file_path -Raw
         }
         $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($mongodb_values_content)
         $encoded_mongodb_values_file = [System.Convert]::ToBase64String($encodedBytes)
