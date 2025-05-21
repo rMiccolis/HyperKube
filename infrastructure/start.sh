@@ -36,6 +36,8 @@ if [ -z "$config_file_path" ]; then usage; exit; fi
 . ./HyperKube/bin/export_colors.sh # executed this way: . ./filename to let exported variables into the script to be added to (this) main process
                                   # if executed this other way: ./filename filename open a new shell that is closed when script ends. So exported variables are not visible here
 
+sudo apt update
+
 # install yq library to read and parse json files
 echo -e "${LBLUE}Installing yq library to read and parse YAML files...${WHITE}"
 sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -q -O /usr/bin/yq > /dev/null && sudo chmod +x /usr/bin/yq > /dev/null
@@ -43,6 +45,10 @@ sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd6
 valid_config=$(. /home/$USER/HyperKube/bin/apps_config_validator.sh /home/$USER/apps_config.yaml | echo $? )
 
 if [ "$valid_config" == "1" ]; then exit 1; fi
+
+
+# install dos2unix utility to convert files from windows crlf to unix style
+sudo apt install dos2unix
 
 echo -e "${LGREEN}Installing No-Ip Dynamic Update Client:${WHITE}"
 cd /home/$USER/
@@ -124,6 +130,7 @@ wait
 echo -e "${LGREEN}cert-manager installed ===> Operation Done!${WHITE}"
 
 . /home/$USER/.profile
+. ./HyperKube/bin/export_colors.sh
 
 export install_mongodb=$(yq ".install_mongodb // \"false\"" $config_file_path)
 export custom_mongodb_setup=$(yq ".custom_mongodb_setup // \"false\"" "$config_file_path")

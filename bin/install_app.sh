@@ -133,7 +133,6 @@ for (( i=0; i<project_count; i++ )); do
 
     # echo "  Env Name: $env_name: $env_value"
     export $env_name=$env_value
-    echo ""
   done
 
   # start application:
