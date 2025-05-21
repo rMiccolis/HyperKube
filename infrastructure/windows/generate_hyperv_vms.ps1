@@ -247,7 +247,7 @@ users:
 keyboard:
    layout: us
 bootcmd:
- - "mkdir /home/$($host_user)/user_custom_scripts"
+ - "mkdir /home/$USER/user_custom_scripts"
 write_files:
  - encoding: b64
    owner: $($host_user):$($host_user)
