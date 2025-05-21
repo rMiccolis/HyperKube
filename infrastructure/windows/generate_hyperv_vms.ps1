@@ -246,8 +246,6 @@ users:
    - $($pub_key)
 keyboard:
    layout: us
-bootcmd:
- - "mkdir -p /home/$($host_user)/user_custom_scripts"
 write_files:
  - encoding: b64
    owner: $($host_user):$($host_user)
