@@ -55,20 +55,20 @@ start_app(){
   if [ -d "./$project_name/env_subsitution" ]; then
     env_subsitution_files=($(ls ./$project_name/env_subsitution/* | sort))
     for file_name in "${env_subsitution_files[@]}"; do
-      echo "${LGREEN}calling envsubst_preserve_empty_variables on: $file_name ${WHITE}"
+      echo -e "${LGREEN}calling envsubst_preserve_empty_variables on: $file_name ${WHITE}"
       envsubst_preserve_empty_variables $file_name
     done
   fi
 
   if [[ "$exec_script_before_deploy" != "false" ]]; then
-    echo "${LGREEN}Calling ./$project_name/${exec_script_before_deploy} ${WHITE}"
+    echo -e "${LGREEN}Calling ./$project_name/${exec_script_before_deploy} ${WHITE}"
     . /home/$USER/.profile
     ./$project_name/${exec_script_before_deploy}
   fi
 
   app_yaml_files=($(ls ./$project_name/kubernetes/*.yaml | sort))
   for file_name in "${app_yaml_files[@]}"; do
-    echo "${LGREEN}calling envsubst_preserve_empty_variables on: $file_name ${WHITE}"
+    echo -e "${LGREEN}calling envsubst_preserve_empty_variables on: $file_name ${WHITE}"
     envsubst_preserve_empty_variables $file_name
     # apply each configuration yaml file with kubernetes
     kubectl apply -f $file_name
@@ -79,7 +79,7 @@ start_app(){
   kubectl wait --for=condition=ContainersReady --all pods --all-namespaces --timeout=3000s &
   wait
   if [[ "$exec_script_after_deploy" != "false" ]]; then
-    echo "${LGREEN}Calling ./$project_name/${exec_script_after_deploy} ${WHITE}"
+    echo -e "${LGREEN}Calling ./$project_name/${exec_script_after_deploy} ${WHITE}"
     . /home/$USER/.profile
     ./$project_name/${exec_script_after_deploy}
   fi
