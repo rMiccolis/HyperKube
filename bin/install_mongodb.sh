@@ -27,7 +27,11 @@ kubectl -n mongodb create secret generic mongodb-ca-secret \
     --from-file=mongodb-ca-cert=$repository_root_dir/tls/mongodb/mongodb-ca-cert.pem \
     --from-file=mongodb-ca-key=$repository_root_dir/tls/mongodb/mongodb-ca-key.pem
 
-kubectl apply -f $repository_root_dir/HyperKube/kubernetes/mongodb
+if [[ "$custom_mongodb_setup" == "true" ]]; then
+  . $repository_root_dir/user_custom_scripts/mongodb_setup.sh
+else
+  kubectl apply -f $repository_root_dir/HyperKube/kubernetes/mongodb
+fi
 
 # use the provided /home/$USER/mongodb_values.yaml to configure the bitnami mongodb helm chart
 helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -n mongodb -f /home/$USER/mongodb_values.yaml

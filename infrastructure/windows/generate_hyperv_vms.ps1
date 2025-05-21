@@ -1,7 +1,8 @@
 param(
 [string]$main_config_file_path,
 [string]$apps_config_file_path,
-[string]$mongodb_values_file_path=""
+[string]$mongodb_values_file_path="",
+[string]$mongodb_setup_file_path=""
 )
 
 # Install NuGet to download and install powershell-yaml to read and parse yaml files
@@ -200,7 +201,13 @@ volumePermissions:
         }
         $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($mongodb_values_content)
         $encoded_mongodb_values_file = [System.Convert]::ToBase64String($encodedBytes)
-    }
+        }
+
+
+        # Encode the mongodb_setup.sh content into base64 (we'll use it to feed cloud-init)
+        $mongodb_setup_content = Get-Content $mongodb_setup_file_path -Raw
+        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($mongodb_setup_content)
+        $encoded_mongodb_setup_file = [System.Convert]::ToBase64String($encodedBytes)
 
     # Set VM Name
     $VMName = $host_user
@@ -230,7 +237,7 @@ $userdata = @"
 package_update: true
 package_upgrade: true
 users:
- - deult
+ - default
  - name: $($host_user)
    groups: [adm, audio, cdrom, dialout, floppy, video, plugdev, dip, netdev, sudo, users, admin, lxd]
    shell: /bin/bash
@@ -239,6 +246,8 @@ users:
    - $($pub_key)
 keyboard:
    layout: us
+bootcmd:
+ - "mkdir /home/$($host_user)/user_custom_scripts"
 write_files:
  - encoding: b64
    owner: $($host_user):$($host_user)
@@ -268,6 +277,12 @@ write_files:
    owner: $($host_user):$($host_user)
    content: $($encoded_mongodb_values_file)
    path: /home/$($host_user)/mongodb_values.yaml
+   permissions: '0777'
+   defer: true
+ - encoding: b64
+   owner: $($host_user):$($host_user)
+   content: $($encoded_mongodb_setup_file)
+   path: /home/$($host_user)/user_custom_scripts/mongodb_setup.sh
    permissions: '0777'
    defer: true
  - encoding: b64

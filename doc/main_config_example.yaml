@@ -24,6 +24,7 @@ kubernetes_version: '1.32'
 docker_username: 'docker_username' # used to build and push docker images to repository
 docker_access_token: 'your_docker_access_token' # used to build and push docker images to repository. To not confuse with password. See here for more info: https://docs.docker.com/security/for-developers/access-tokens/
 email: 'your_email@gmail.com' # used to build and push docker images to repository
-install_default_mongodb: 'true' # 'true' if you want to deploy a mongodb instance. To edit default settings go to /bin/install_mongodb.sh and edit /home/$USER/mongodb_values.yaml
-mongo_root_username: mongodb_username # provide this if install_default_mongodb: 'true'
-mongo_root_password: mongo_password # provide this if install_default_mongodb: 'true'
+install_mongodb: 'true' # 'true' if you want to deploy a mongodb instance. To edit default settings go to /bin/install_mongodb.sh and edit /home/$USER/mongodb_values.yaml
+custom_mongodb_setup: 'true' # 'true' if you want to pass "-mongodb_setup_file_path" parameter when launching 'generate_hyperv_vms.ps1'. This file is useful to execute a bash script to prepare mongodb installation. See LINK
+mongo_root_username: mongodb_username # provide this if install_mongodb: 'true' and you don't provide -mongodb_values_file_path parameter when launching 'generate_hyperv_vms.ps1'
+mongo_root_password: mongo_password # provide this if install_mongodb: 'true' and you don't provide -mongodb_values_file_path parameter when launching 'generate_hyperv_vms.ps1'
