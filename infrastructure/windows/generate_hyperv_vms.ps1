@@ -166,10 +166,11 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
             # - extraDnsNames makes bitnami helm chart add a DNS entry for the host aliases inside tls certificate
             $load_balancer_dns_name = $config.load_balancer_dns_name
 
-            if (($config.PSObject.Properties.Name -contains 'mongo_root_username') -and ($config.PSObject.Properties.Name -contains 'mongo_root_password')) {
-                $mongo_root_username = $config.mongo_root_username
-                $mongo_root_password = $config.mongo_root_password
-            } else {
+            # set values for username and psw if are provided
+            $mongo_root_username = $config.mongo_root_username
+            $mongo_root_password = $config.mongo_root_password
+            if (($null -eq $mongo_root_username) -or ($null -eq $mongo_root_password)) {
+                # set defaults otherwise
                 $mongo_root_username = "mongo_root_username"
                 $mongo_root_password = "mongo_root_password"
             }
