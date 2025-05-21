@@ -1,6 +1,7 @@
 param(
 [string]$main_config_file_path,
-[string]$apps_config_file_path
+[string]$apps_config_file_path,
+[string]$mongodb_values_file_path=""
 )
 
 # Install NuGet to download and install powershell-yaml to read and parse yaml files
@@ -152,10 +153,39 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
         $encoded_main_config_content = [System.Convert]::ToBase64String($encodedBytes)
 
 
-        # Encode the main_config.yaml content into base64 (we'll use it to feed cloud-init)
-        $apps_config_file_path = Get-Content $apps_config_file_path -Raw
-        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($apps_config_file_path)
+        # Encode the apps_config.yaml content into base64 (we'll use it to feed cloud-init)
+        $apps_config_content = Get-Content $apps_config_file_path -Raw
+        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($apps_config_content)
         $encoded_apps_config_file = [System.Convert]::ToBase64String($encodedBytes)
+
+        # Encode the mongodb_values.yaml content into base64 (we'll use it to feed cloud-init)
+        if ($mongodb_values_file_path -eq "") {
+            $mongodb_values_content = @'
+architecture: standalone
+tls:
+  enabled: true
+  existingSecret: mongodb-ca-secret
+  extraDnsNames:
+  - "$app_server_addr"
+auth:
+  enabled: true
+  rootUser: $mongo_root_username
+  rootPassword: $mongo_root_password
+persistence:
+  enabled: true
+  existingClaim: mongodb-pvc
+securityContext:
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroup: 1001
+volumePermissions:
+  enabled: true
+'@
+        } else {
+            $mongodb_values_content = Get-Content $mongodb_values_content -Raw
+        }
+        $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($mongodb_values_content)
+        $encoded_mongodb_values_file = [System.Convert]::ToBase64String($encodedBytes)
     }
 
     # Set VM Name
@@ -218,6 +248,12 @@ write_files:
    owner: $($host_user):$($host_user)
    content: $($encoded_apps_config_file)
    path: /home/$($host_user)/apps_config.yaml
+   permissions: '0777'
+   defer: true
+ - encoding: b64
+   owner: $($host_user):$($host_user)
+   content: $($encoded_mongodb_values_file)
+   path: /home/$($host_user)/mongodb_values.yaml
    permissions: '0777'
    defer: true
  - encoding: b64

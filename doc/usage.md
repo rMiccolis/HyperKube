@@ -20,6 +20,7 @@
 
 ## Mandatory OS Operations before executing './infrastructure/start.sh' (follow these steps in the example paragraph)
 
+- **🐧 Create a virtual switch on Hyper-V with name: "VM"**
 - **🐧 Choose a linux distro which makes use of systemd as init service**
 - **💻 Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list =>  00 15 5D 38 01 30,  00 15 5D 38 01 31,  00 15 5D 38 01 32...)
 - **🌐 If you don't have a static public IP, you need to setup NO-IP DDNS service in order to make wireguard work.**
