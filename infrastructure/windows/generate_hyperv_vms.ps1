@@ -160,13 +160,26 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
 
         # Encode the mongodb_values.yaml content into base64 (we'll use it to feed cloud-init)
         if ($mongodb_values_file_path -eq "") {
-            $mongodb_values_content = @'
+
+            # use load_balancer_dns_name to reach mongodb instance.
+            # load_balancer_dns_name is also needed for the tls certificate to work:
+            # - extraDnsNames makes bitnami helm chart add a DNS entry for the host aliases inside tls certificate
+            $load_balancer_dns_name = $config.load_balancer_dns_name
+
+            if (($config.PSObject.Properties.Name -contains 'mongo_root_username') -and ($config.PSObject.Properties.Name -contains 'mongo_root_password')) {
+                $mongo_root_username = $config.mongo_root_username
+                $mongo_root_password = $config.mongo_root_password
+            } else {
+                $mongo_root_username = "mongo_root_username"
+                $mongo_root_password = "mongo_root_password"
+            }
+            $mongodb_values_content = @"
 architecture: standalone
 tls:
   enabled: true
   existingSecret: mongodb-ca-secret
   extraDnsNames:
-  - "$app_server_addr"
+  - "$load_balancer_dns_name"
 auth:
   enabled: true
   rootUser: $mongo_root_username
@@ -180,7 +193,7 @@ securityContext:
   fsGroup: 1001
 volumePermissions:
   enabled: true
-'@
+"@
         } else {
             $mongodb_values_content = Get-Content $mongodb_values_content -Raw
         }
