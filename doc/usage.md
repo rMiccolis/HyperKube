@@ -94,20 +94,20 @@ There are two methods to install it:
 
 2. With a custom mongodb_values.yaml
 
-   1. Provide inside main_config.yaml just the following:
+   - Provide inside main_config.yaml just the following:
 
     ```yaml
         install_mongodb: 'true'
     ```
 
-   2. Provide mongodb_values.yaml to generate_hyperv_vms.ps1 with the parameter "-mongodb_values_file_path" with the path to the file:
+   - Provide mongodb_values.yaml to generate_hyperv_vms.ps1 with the parameter "-mongodb_values_file_path" with the path to the file:
 
     ```powershell
     powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml"
     ```
 
     You can get info on how to configure this file at the [Bitnami helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb)
-   3. if you have to perform additional setup to make the configuration work, provide a file named "mongodb_setup.sh" to this script with the parameter "-mongodb_setup_file_path" which will skip the application of files inside ./kubernetes/mongodb/ folder. Provide inside main_config.yaml the following:
+   - if you have to perform additional setup to make the configuration work, provide a file named "mongodb_setup.sh" to this script with the parameter "-mongodb_setup_file_path" which will skip the application of files inside ./kubernetes/mongodb/ folder. Provide inside main_config.yaml the following:
         - install_mongodb: 'true'
         - custom_mongodb_setup: 'true'
         After "mongodb_setup.sh" execution, the process will install mongodb bitnami helm chart with "mongodb_values.yaml" file configuration at "/home/$USER/mongodb_values.yaml"
