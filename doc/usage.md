@@ -87,9 +87,9 @@ There are two methods to install it:
     Example:
 
     ```yaml
-        install_mongodb: 'true'
-        mongo_root_username: 'your_mongodb_username'
-        mongo_root_password: 'your_mongodb_password'
+    install_mongodb: 'true'
+    mongo_root_username: 'your_mongodb_username'
+    mongo_root_password: 'your_mongodb_password'
     ```
 
 2. With a custom mongodb_values.yaml
@@ -97,7 +97,7 @@ There are two methods to install it:
    - Provide inside main_config.yaml just the following:
 
     ```yaml
-        install_mongodb: 'true'
+    install_mongodb: 'true'
     ```
 
    - Provide mongodb_values.yaml to generate_hyperv_vms.ps1 with the parameter "-mongodb_values_file_path" with the path to the file:
