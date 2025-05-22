@@ -1,6 +1,19 @@
 # Instructions to generate a correct apps_config.yaml configuration
 
-You can find an example of apps_config.yaml file [HERE](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml)
+This file lets you provide informations on how to install and deploy your custom applications to the cluster.
+It supports the execution of '.sh' files inside your app:
+
+- **exec_script_before_deploy**: Here you can specify the execution call to a ".sh" file. This is executed BEFORE the /kubernetes folder  inside your project is applied to the cluster. For example if you have a "build.sh" file inside a bin folder you could set this to:
+
+    ```yaml
+    exec_script_before_deploy: 'bin/build.sh -s 1 -c 1 -b input-tls -p https -i $app_server_addr -d $docker_username -t 1'
+    ```
+
+    For the list of variables you can use see: [Environment Variables](#environment-variables-usable-inside-exec_script_before_deploy-or-exec_script_after_deploy-and-env_subsitution-folder)
+
+- **exec_script_after_deploy**:  Here you can specify the execution call to a ".sh" file. This is executed AFTER the "/kubernetes" folder inside your project is applied to the cluster. It has all the same behavior of "exec_script_before_deploy"
+
+You can find an example of [apps_config.yaml](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml)
 
 ## Required Fields
 
@@ -18,7 +31,7 @@ Each project in the projects list must include:
 
   Field:                        Description:
 
-- port:                         External port for ingress (e.g. 27017 for MongoDB)
+- port:                         External port for ingress (e.g. 27017 for MongoDB). This will open a port inside NGINX ingress controller
 - service_name:                 Service name to use for the ingress route (required if port is specified)
 - exec_script_before_deploy:    Relative path to the script to run before deploying the project (optional). You can use a set of already defined environment variables in this script. It's even possible to use them as parameter of script inside 'exec_script_before_deploy'. [Example](#example-of-execution-of-a-script-before-deploying)
 - exec_script_after_deploy:     Relative path to the script to run after deployment (optional). You can use a set of already defined environment variables in this script. It's even possible to use them as parameter of script inside 'exec_script_after_deploy'. [Example](#example-of-execution-of-a-script-before-deploying)
@@ -62,7 +75,7 @@ The validation checks for:
 
 ## Notes
 
-- **If a tls certificate (.pem file) is needed, "tls-cert.pem" file is generated inside /home/$USER/tls/** */
+- **If a tls certificate (.pem file) is needed, "tls-cert.pem" file is generated inside /home/$USER/tls/**
 
 - The GitHub repository is cloned automatically before deployment.
 
