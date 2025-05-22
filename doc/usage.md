@@ -110,8 +110,8 @@ There are two methods to install it:
    - if you have to perform additional setup to make the configuration work, provide a file named "mongodb_setup.sh" to this script with the parameter "-mongodb_setup_file_path" which will skip the application of files inside ./kubernetes/mongodb/ folder. Provide inside main_config.yaml the following:
 
         ```yaml
-        - install_mongodb: 'true'
-        - custom_mongodb_setup: 'true'
+        install_mongodb: 'true'
+        custom_mongodb_setup: 'true'
         ```
 
         After "mongodb_setup.sh" execution, the process will install mongodb bitnami helm chart with "mongodb_values.yaml" file configuration at "/home/$USER/mongodb_values.yaml"
