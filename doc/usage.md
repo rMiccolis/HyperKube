@@ -129,7 +129,7 @@ There are two methods to install it:
     custom_mongodb_setup: 'true'
     ```
 
-## Applications install
+## Your Custom Applications install
 
 In your project you have to provide a "kubernetes" folder with all the .yaml files needed to install the application.
 In addition you can have:
