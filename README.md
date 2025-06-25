@@ -22,7 +22,7 @@ Furthermore, the project facilitates the deployment of user-defined applications
 
 **In essence, this project offers a self-contained, customizable, and cost-effective way to:**
 
-- **Learn and experiment** with cloud-native technologies like Kubernetes, Docker, and associated ecosystem tools in a realistic environment.
+- **Learn and experiment** with cloud-native technologies like Kubernetes, Docker, and associated ecosystem tools in a realistic environment on bare metal.
 - **🧪 Develop and test applications** in a simulated production setting before deploying to actual cloud providers.
 - **⚙️ Understand the underlying infrastructure** and configurations required for a cloud-based application deployment.
 - **Create isolated and reproducible environments** for development, testing, or demonstration purposes.
