@@ -1,30 +1,30 @@
 ---
 # infrastructure info:
-noip_username: 'noip_username' # set to '' to not use noip for ddns for the load_balancer_dns_name
-noip_password: 'noip_password' # set to '' to not use noip for ddns for the load_balancer_dns_name
-android_app_ready: 'true' # set to true to support the building of android app (in capacitor.config.json insert the ${master_host_VPN_ip} as for ex: 10.11.1.1 and not the dns name). The app will be reachable at that IP (10.11.1.1)
-app_run_on_vpn: 'false' # set to true if you want app to work behind a vpn. Set to false if you want to use https protocol. IMPORTANT: even if you set false, variables for vpn configuration are needed.
-application_dns_name: 'bob617.ddns.net' # this will be the dns to reach the entire cluster from the vpn
-load_balancer_dns_name: 'cluster.ddns.com' # public dns name where main server is reachable. For a "domestic" use, adopt a free DDNS service (see no-ip.com website) to set this name, in this case set the public ddns from no-ip
-load_balancer_public_ip: 'bob617.ddns.net' # this is the cluster public IP (your load balancer public IP)
+noip_username: "noip_username" # set to '' to not use noip for ddns for the load_balancer_dns_name
+noip_password: "noip_password" # set to '' to not use noip for ddns for the load_balancer_dns_name
+android_app_ready: "true" # set to true to support the building of android app (in capacitor.config.json insert the ${master_host_VPN_ip} as for ex: 10.11.1.1 and not the dns name). The app will be reachable at that IP (10.11.1.1)
+app_run_on_vpn: "false" # set to true if you want app to work behind a vpn. Set to false if you want to use https protocol. IMPORTANT: even if you set false, variables for vpn configuration are needed.
+application_dns_name: "bob617.ddns.net" # this will be the dns to reach the entire cluster from the vpn
+load_balancer_dns_name: "cluster.ddns.com" # public dns name where main server is reachable. For a "domestic" use, adopt a free DDNS service (see no-ip.com website) to set this name, in this case set the public ddns from no-ip
+load_balancer_public_ip: "bob617.ddns.net" # this is the cluster public IP (your load balancer public IP)
 # For each of the following hosts must be provided: host_username@internal_ip_address@desired_vpn_ip
-master_host: 'm1@192.168.1.200@10.11.1.1' # kubernetes master host IP from which everything is executed: provide it from internal interface (192.168...)
+master_host: "m1@192.168.1.200@10.11.1.1" # kubernetes master host IP from which everything is executed: provide it from internal interface (192.168...)
 hosts: # list of ONLY worker and other control plane nodes: made in the form of: USERNAME@IP_ADDRESS
-- 'm1@192.168.1.201@10.11.1.2' # hosts starting with 'm' will be considered as control plane nodes
-- 'w2@192.168.1.202@10.11.1.3' # hosts starting with 'w' will be considered as worker nodes
-vm_cpu_count: '2' # Virtual machine's cpu number
-vm_min_ram: '2GB' # Virtual machine's minimum amount of RAM
-vm_max_ram: '4GB' # Virtual machine's maximum amount of RAM
-github_branch_name: 'develop' # the branch to pull the code from
+  - "m1@192.168.1.201@10.11.1.2" # hosts starting with 'm' will be considered as control plane nodes
+  - "w2@192.168.1.202@10.11.1.3" # hosts starting with 'w' will be considered as worker nodes
+vm_cpu_count: "2" # Virtual machine's cpu number
+vm_min_ram: "2GB" # Virtual machine's minimum amount of RAM
+vm_max_ram: "4GB" # Virtual machine's maximum amount of RAM
+github_branch_name: "develop" # the branch to pull the code from
 oscdimg_path: 'C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg\oscdimg.exe' # You must provide the oscdimg.exe path. https://learn.microsoft.com/it-it/windows-hardware/get-started/adk-install . Oscdimg is used to write the CIDATA image (containing meta-data and user-data files) for cloud init as a ISO 9660 image
 qemuimg_path: 'E:\Download\qemu-img\qemu-img.exe' # http://www.cloudbase.it/qemu-img-windows/. Quemu is used to convert ubuntu cloud-image to a virtual hard drive to be used by virtual machines
 vm_store_path: 'F:\VM' # the path where all the virtual machines will be stored
 os_image_path: 'E:\Desktop\torrent downloads\SO\focal-server-cloudimg-amd64.img' # the operating system path to be installed on all virtual machines. You must pick up a cloud-image, cloud-init configuration won't work otherwise
-kubernetes_version: '1.32'
-docker_username: 'docker_username' # used to build and push docker images to repository
-docker_access_token: 'your_docker_access_token' # used to build and push docker images to repository. To not confuse with password. See here for more info: https://docs.docker.com/security/for-developers/access-tokens/
-email: 'your_email@gmail.com' # used to build and push docker images to repository
-install_mongodb: 'true' # 'true' if you want to deploy a mongodb instance. To edit default settings go to /bin/install_mongodb.sh and edit /home/$USER/mongodb_values.yaml
-custom_mongodb_setup: 'true' # 'true' if you want to pass "-mongodb_setup_file_path" parameter when launching 'generate_hyperv_vms.ps1'. This file is useful to execute a bash script to prepare mongodb installation. See LINK
+kubernetes_version: "1.32"
+docker_username: "docker_username" # used to build and push docker images to repository
+docker_access_token: "your_docker_access_token" # used to build and push docker images to repository. To not confuse with password. See here for more info: https://docs.docker.com/security/for-developers/access-tokens/
+email: "your_email@gmail.com" # used to build and push docker images to repository
+install_mongodb: "true" # 'true' if you want to deploy a mongodb instance. To edit default settings go to you must provide mongodb_values.yaml
+custom_mongodb_setup: "true" # 'true' if you want to pass "-mongodb_setup_file_path" parameter when launching 'generate_hyperv_vms.ps1'. This file is useful to execute a bash script to prepare mongodb installation. Set to 'false' if you want to use the default mongodb setup (mongodb_values.yaml) without any custom bash script, or set "false" if you provide mongodb_values_file_path parameter to 'generate_hyperv_vms.ps1' script
 mongo_root_username: mongodb_username # provide this if install_mongodb: 'true' and you don't provide -mongodb_values_file_path parameter when launching 'generate_hyperv_vms.ps1'
 mongo_root_password: mongo_password # provide this if install_mongodb: 'true' and you don't provide -mongodb_values_file_path parameter when launching 'generate_hyperv_vms.ps1'

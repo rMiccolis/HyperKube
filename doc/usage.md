@@ -11,7 +11,7 @@
 - Kubernetes version: v1.32.3 (scritps always try to install latest version)
 
 ⚠️ After creating VM with a linux distro:
-    (Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
+(Skip these steps if launching infrastructure from "generate_hyperv_vms.ps1")
 
 - Disable windows secure boot
 - Set minimum 50GB of disk space
@@ -22,7 +22,7 @@
 
 - **🐧 Create a virtual switch on Hyper-V with name: "VM"**
 - **🐧 Choose a linux distro which makes use of systemd as init service**
-- **💻 Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list =>  00 15 5D 38 01 30,  00 15 5D 38 01 31,  00 15 5D 38 01 32...)
+- **💻 Set static MAC address and assign a fixed ip address to it from the router** (EX: MAC address: 00 15 5D 38 01 30 and assign it to ip address 192.168.1.200. MAC address list => 00 15 5D 38 01 30, 00 15 5D 38 01 31, 00 15 5D 38 01 32...)
 - **🌐 If you don't have a static public IP, you need to setup NO-IP DDNS service in order to make wireguard work.**
 - **🔑 Install an ssh server** (Skip this step if launching infrastructure from "generate_hyperv_vms.ps1")
 - **🤝 Add all cluster partecipating hosts to the hosts file**
@@ -51,7 +51,7 @@ TO LET THIS SCRIPT WORK, YOU **MUST**:
 Input parameters:
 
 - [main_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml) (mandatory) => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application.
-- mongodb_values.yaml (optional) => This is the path to the configuration file for mongodb bitnami helm chart and MUST be called "mongodb_values.yaml". For usage see [MongoDB installation](#mongodb-installation) This is the yaml file to configure the chart. For info on how to fill this file see the [Bitnami Helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb).
+- mongodb_values_file_path (optional) => This is the path to a mongodb_values.yaml configuration file for mongodb bitnami helm chart and MUST be called "mongodb_values.yaml". For usage see [MongoDB installation](#mongodb-installation) This is the yaml file to configure the chart. For info on how to fill this file see the [Bitnami Helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb). It must be provided if you want to use a custom values.yaml file to be provided to the Bitnami Helm chart.
 - [apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml) ([instructions](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md)) => This is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order).
 
 ## MongoDB installation
@@ -60,74 +60,75 @@ There are two methods to install it:
 
 1. With the default configuration:
 
-    ```yaml
-    architecture: standalone
-    tls:
-    enabled: true
-    existingSecret: mongodb-ca-secret
-    extraDnsNames:
-    - "$load_balancer_dns_name"
-    auth:
-    enabled: true
-    rootUser: $mongo_root_username
-    rootPassword: $mongo_root_password
-    persistence:
-    enabled: true
-    existingClaim: mongodb-pvc
-    securityContext:
-    runAsUser: 1001
-    runAsGroup: 1001
-    fsGroup: 1001
-    volumePermissions:
-    enabled: true
-    ```
+   ```yaml
+   architecture: standalone
+   tls:
+   enabled: true
+   existingSecret: mongodb-ca-secret
+   extraDnsNames:
+   - "$load_balancer_dns_name"
+   auth:
+   enabled: true
+   rootUser: $mongo_root_username
+   rootPassword: $mongo_root_password
+   persistence:
+   enabled: true
+   existingClaim: mongodb-pvc
+   securityContext:
+   runAsUser: 1001
+   runAsGroup: 1001
+   fsGroup: 1001
+   volumePermissions:
+   enabled: true
+   ```
 
-    Where "$load_balancer_dns_name", "$mongo_root_username" and "$mongo_root_password" have to be provided inside main_config.yaml.
-    With this method you don't have to provide any file as parameter to generate_hyperv_vms.ps1, just fill those variables inside the main_config.yaml.
-    Example:
+   Where "$load_balancer_dns_name", "$mongo_root_username" and "$mongo_root_password" have to be provided inside main_config.yaml.
+   With this method you don't have to provide any file as parameter to generate_hyperv_vms.ps1, just fill those variables inside the main_config.yaml.
+   Example:
 
-    ```yaml
-    install_mongodb: 'true'
-    mongo_root_username: 'your_mongodb_username'
-    mongo_root_password: 'your_mongodb_password'
-    ```
+   ```yaml
+   install_mongodb: "true"
+   mongo_root_username: "your_mongodb_username"
+   mongo_root_password: "your_mongodb_password"
+   ```
 
 2. With a custom mongodb_values.yaml
 
    - Provide inside main_config.yaml just the following:
 
-    ```yaml
-    install_mongodb: 'true'
-    ```
+   ```yaml
+   install_mongodb: "true"
+   ```
 
    - Provide mongodb_values.yaml to generate_hyperv_vms.ps1 with the parameter "-mongodb_values_file_path" with the path to the file:
 
-    ```powershell
-    powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml"
-    ```
+   ```powershell
+   powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml"
+   ```
 
-    You can get info on how to configure this file at the [Bitnami helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb)
+   You can get info on how to configure this file at the [Bitnami helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb)
+
    - if you have to perform additional setup to make the configuration work, provide a file named "mongodb_setup.sh" to this script with the parameter "-mongodb_setup_file_path" which will skip the application of files inside ./kubernetes/mongodb/ folder. Provide inside main_config.yaml the following:
 
-        ```yaml
-        install_mongodb: 'true'
-        custom_mongodb_setup: 'true'
-        ```
+     ```yaml
+     install_mongodb: "true"
+     custom_mongodb_setup: "true"
+     ```
 
-        After "mongodb_setup.sh" execution, the process will install mongodb bitnami helm chart with "mongodb_values.yaml" file configuration at "/home/$USER/mongodb_values.yaml"
+     After "mongodb_setup.sh" execution, the process will install mongodb bitnami helm chart with "mongodb_values.yaml" file configuration at "/home/$USER/mongodb_values.yaml"
 
-    Example of script execution:
+   Example of script execution:
 
-    ```powershell
-    powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml" -mongodb_setup_file_path "E:\\path\to\mongodb_setup.sh"
-    ```
+   ```powershell
+   powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml" -mongodb_setup_file_path "E:\\path\to\mongodb_setup.sh"
+   ```
 
-    main_config.yaml:
+   main_config.yaml:
 
-    ```yaml
-    install_mongodb: 'true'
-    custom_mongodb_setup: 'true'
-    ```
+   ```yaml
+   install_mongodb: "true"
+   custom_mongodb_setup: "true"
+   ```
 
 ## Your Custom Applications install
 
@@ -141,7 +142,7 @@ In addition you can have:
 powershell.exe -noprofile -executionpolicy bypass -file "E:\Desktop\HyperKube\infrastructure\windows\generate_hyperv_vms.ps1" -main_config_file_path "E:\Download\main_config.yaml" -apps_config_file_path "E:\Download\apps_config.yaml"
 ```
 
-___
+---
 
 ## MANUAL STARTUP EXAMPLE (NOT RECOMMENDED!)
 
