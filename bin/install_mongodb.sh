@@ -66,6 +66,7 @@ else
   kubectl apply -f $repository_root_dir/HyperKube/kubernetes/mongodb
 fi
 
+. /home/$USER/.profile
 # use the provided /home/$USER/mongodb_values.yaml to configure the bitnami mongodb helm chart
 # and substitute any environment variables
 envsubst_preserve_empty_variables /home/$USER/mongodb_values.yaml
