@@ -203,13 +203,13 @@ volumePermissions:
         $encoded_mongodb_values_file = [System.Convert]::ToBase64String($encodedBytes)
         }
 
-        if ($mongodb_values_file_path -eq "") {
-          # Encode the mongodb_setup.sh content into base64 (we'll use it to feed cloud-init)
+        if ($mongodb_setup_file_path -eq "") {
           $mongodb_setup_content = ""
         } else {
           $mongodb_setup_content = Get-Content $mongodb_setup_file_path -Raw
         }
         $encodedBytes = [System.Text.Encoding]::UTF8.GetBytes($mongodb_setup_content)
+        # Encode the mongodb_setup.sh content into base64 (we'll use it to feed cloud-init)
         $encoded_mongodb_setup_file = [System.Convert]::ToBase64String($encodedBytes)
 
     # Set VM Name
