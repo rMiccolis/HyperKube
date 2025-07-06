@@ -130,6 +130,33 @@ There are two methods to install it:
    custom_mongodb_setup: "true"
    ```
 
+### MongoDB tls connection
+
+The tls certificate to connecto to Mongodb will be found at /home/$USER/tls/tls-cert.pem. Provide this certificate to your connection string.
+
+To use this certificate you can copy the tls-cert.pem inside the application docker image. This can be achieved submitting the a bash (.sh) file with the property "exec_script_before_deploy" inside the [apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md). EX:
+
+```bash
+# copy the tls file from $repository_root_dir/
+cp "/home/$USER/tls/tls-cert.pem" "/home/$USER/apps/YOUR_APPLICATION_NAME/mongodb-tls-cert.pem"
+# Start building YOUR_APPLICATION_NAME docker image
+sudo docker build -t $docker_username/YOUR_IMAGE_NAME -f /home/$USER/apps/YOUR_APPLICATION_NAME/YOUR_APPLICATION_NAME.dockerfile /home/$USER/apps/YOUR_APPLICATION_NAME/
+```
+
+Then you can see it inside your application and find it according to the position you provided inside your docker image
+
+Nodejs options example with mongoose:
+
+```javascript
+const serverRoot = __dirname;
+const pem_file_path = path.join(serverRoot, "mongodb-tls-cert.pem");
+mongodb_options = {
+  tls: true,
+  tlsCAFile: pem_file_path,
+  tlsCertificateKeyFile: pem_file_path,
+};
+```
+
 ## Your Custom Applications install
 
 In your project you have to provide a "kubernetes" folder with all the .yaml files needed to install the application.
