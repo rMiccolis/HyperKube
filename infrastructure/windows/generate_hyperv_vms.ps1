@@ -60,7 +60,7 @@ $vm_cpu_count = [int]$config.vm_cpu_count
 $vm_min_ram = (Invoke-Expression $config.vm_min_ram)
 $vm_max_ram = (Invoke-Expression $config.vm_max_ram)
 
-echo $vm_cpu_count $vm_min_ram $vm_max_ram
+Write-Output $vm_cpu_count $vm_min_ram $vm_max_ram
 
 # Read the github branch name where to pull the code from
 $github_branch_name = $config.github_branch_name
@@ -76,9 +76,9 @@ $all_hosts+=$config.hosts
 # If no path to store VM is found then store them into C:\Users\USERNAME\HyperKube_vm
 if (!$vm_store_path) {
     $vm_store_path="$env:USERPROFILE\HyperKube_vm"
-    echo "path to store VM is found then store them into $vm_store_path"
+    Write-Output "path to store VM is found then store them into $vm_store_path"
 }
-echo "Generating VMs in $vm_store_path folder"
+Write-Output "Generating VMs in $vm_store_path folder"
 
 # Read the Ethernet Adapter device that is providing network to this host
 $eth_adapter=Get-NetAdapter -Name "Ethernet"
@@ -88,7 +88,7 @@ $eth_adapter=$eth_adapter.InterfaceDescription
 $vm_adapter=Get-NetAdapter -Name "vEthernet (VM)" -ErrorAction SilentlyContinue
 # If it does not exists, create it
 if (!$vm_adapter) {
-    echo "generating Virtual switch 'VM' with adapter: $eth_adapter..."
+    Write-Output "generating Virtual switch 'VM' with adapter: $eth_adapter..."
     New-VMSwitch -Name "VM" -NetAdapterName "Ethernet" | Out-Null
 }
 
@@ -102,7 +102,7 @@ for ($j=0;$j -lt $all_hosts.Length; $j++) {
     $host_ip=$host_info[1]
     $existing_vm=Get-VM -Name $host_user -ErrorAction SilentlyContinue
     if ($existing_vm) {
-        echo "Removing $host_user VM from Hyper-V"
+        Write-Output "Removing $host_user VM from Hyper-V"
         Stop-VM -Name $host_user -ErrorAction SilentlyContinue
         Remove-VMHardDiskDrive -VMName $host_user -ControllerType SCSI -ControllerNumber 0 -ControllerLocation 0
         Remove-VM -Name $host_user -Force
@@ -113,7 +113,7 @@ for ($j=0;$j -lt $all_hosts.Length; $j++) {
 # if $vm_store_path exists then remove it and generate it from scatch
 if (!(Test-Path -Path $vm_store_path)) {
     # Remove-Item -LiteralPath $vm_store_path -Recurse
-    echo "Generating $vm_store_path folder... Here will be stored all virtual machines."
+    Write-Output "Generating $vm_store_path folder... Here will be stored all virtual machines."
     New-Item -Path $vm_store_path -ItemType Directory
 }
 
@@ -142,7 +142,7 @@ for ($i=0;$i -lt $all_hosts.Length; $i++) {
     # Write host into hosts dictionary
     $hosts[$host_user]=$host_ip
 
-    echo "Setting up $host_user virtual machine..."
+    Write-Output "Setting up $host_user virtual machine..."
 
     # Encode the main_config.yaml content into base64 (we'll use it to feed cloud-init)
     $encoded_main_config_content="Cg=="
@@ -314,7 +314,7 @@ runcmd:
     $VM_exist = Get-VM -name $VMName -ErrorAction SilentlyContinue | ConvertTo-Json | ConvertFrom-Json
     $VM_exist_name = $VM_exist.Name
     if ($VM_exist_name) {
-        echo "Removing already existing VM $VM_exist_name..."
+        Write-Output "Removing already existing VM $VM_exist_name..."
         Remove-VM -Name $VMName -Force
         if (Test-Path -Path "$vm_store_path\$host_user") {
             Start-Sleep -Seconds 120
@@ -340,7 +340,7 @@ runcmd:
     # Clean up temp directory
     rd -Path $tempPath -Recurse -Force
 
-    echo "Generating VM $host_user with mac address: $mac_address"
+    Write-Output "Generating VM $host_user with mac address: $mac_address"
 
     # Create New Virtual Machine
     New-VM -Name $VMName -Generation 2 -VHDPath $vhdx -Path "$vm_store_path\$VMName" -SwitchName $virtualSwitchName
@@ -355,15 +355,15 @@ runcmd:
 
     # Disable Secure Boot
     Set-VMFirmware -VMName $VMName -EnableSecureBoot "Off"
-    echo "$host_user Virtual Machine installed at $vm_store_path\$host_user"
-    echo "Booting up $host_user virtual machine and preparing for first boot..."
+    Write-Output "$host_user Virtual Machine installed at $vm_store_path\$host_user"
+    Write-Output "Booting up $host_user virtual machine and preparing for first boot..."
     # Start the VM
     Start-VM -Name $host_user
 }
 
-echo "Starting application installation..."
+Write-Output "Starting application installation..."
 
-echo "Waiting for $master_host_name virtual machine to fully boot up..."
+Write-Output "Waiting for $master_host_name virtual machine to fully boot up..."
 $vm_ready = $False
 # Test periodically if the master vm is up to execute the clone of the code from repository
 while ($vm_ready -eq $False) {
@@ -383,7 +383,7 @@ while ($vm_ready -eq $False) {
                     $work = 0
                     $vm_ready = $True
                     # ssh-keyscan $master_host_ip | Out-File -Filepath "$HOME/.ssh/known_hosts" -Append
-                    echo "Cloning branch $github_branch_name..."
+                    Write-Output "Cloning branch $github_branch_name..."
                     # Cloning the github repository code of the specified branch
                     ssh $master_host_name@$master_host_ip "git clone --single-branch --branch $github_branch_name 'git@github.com:rMiccolis/HyperKube.git' '/home/$master_host_name/HyperKube'"
                     ssh $master_host_name@$master_host_ip "chmod u+x /home/$master_host_name/HyperKube -R"
@@ -394,13 +394,13 @@ while ($vm_ready -eq $False) {
                     Set-Clipboard -Value "./HyperKube/infrastructure/start.sh -c '/home/$master_host_name/main_config.yaml'"
                 }
             } else {
-                echo "$master_host_name@$master_host_ip => cloud-init $cloud_init_status"
+                Write-Output "$master_host_name@$master_host_ip => cloud-init $cloud_init_status"
             }
         }
     }
 }
 
-echo "Done! All hosts are configured."
-echo "To start the infrastructure setup run this command on the just opened cmd:"
-echo "./HyperKube/infrastructure/start.sh -c '/home/$master_host_name/main_config.yaml'"
-echo "(This command is already copied in the clipboard, you just have to paste it and run it)"
+Write-Output "Done! All hosts are configured."
+Write-Output "To start the infrastructure setup run this command on the just opened cmd:"
+Write-Output "./HyperKube/infrastructure/start.sh -c '/home/$master_host_name/main_config.yaml'"
+Write-Output "(This command is already copied in the clipboard, you just have to paste it and run it)"
