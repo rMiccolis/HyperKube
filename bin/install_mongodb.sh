@@ -67,11 +67,12 @@ else
 fi
 
 . /home/$USER/.profile
-chmod u+x /home/$USER/mongodb_values.yaml
+chmod 777 /home/$USER/mongodb_values.yaml
 
 # use the provided /home/$USER/mongodb_values.yaml to configure the bitnami mongodb helm chart
 # and substitute any environment variables
-envsubst_preserve_empty_variables /home/$USER/mongodb_values.yaml
+envsubst_preserve_empty_variables "/home/$USER/mongodb_values.yaml"
+echo "substituted variables in /home/$USER/mongodb_values.yaml: $(cat /home/$USER/mongodb_values.yaml)"
 helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -n mongodb -f /home/$USER/mongodb_values.yaml
 
 kubectl rollout status deployment mongodb -n mongodb --timeout=3000s > /dev/null 2>&1
