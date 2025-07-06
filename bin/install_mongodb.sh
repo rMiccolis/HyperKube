@@ -67,6 +67,8 @@ else
 fi
 
 . /home/$USER/.profile
+chmod u+x /home/$USER/mongodb_values.yaml
+
 # use the provided /home/$USER/mongodb_values.yaml to configure the bitnami mongodb helm chart
 # and substitute any environment variables
 envsubst_preserve_empty_variables /home/$USER/mongodb_values.yaml
