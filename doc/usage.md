@@ -89,8 +89,6 @@ There are two methods to install it:
 
    ```yaml
    install_mongodb: "true"
-   mongo_root_username: "your_mongodb_username"
-   mongo_root_password: "your_mongodb_password"
    ```
 
 2. With a custom mongodb_values.yaml
@@ -113,7 +111,6 @@ There are two methods to install it:
 
      ```yaml
      install_mongodb: "true"
-     custom_mongodb_setup: "true"
      ```
 
      After "mongodb_setup.sh" execution, the process will install mongodb bitnami helm chart with "mongodb_values.yaml" file configuration at "/home/$USER/mongodb_values.yaml"

@@ -14,6 +14,11 @@ export master_host_name=$(whoami)
 echo -e "${LBLUE}Setting Master host name ===> $master_host_name${WHITE}"
 sudo hostnamectl set-hostname $master_host_name
 
+if [ -s "/home/$USER/user_custom_scripts/mongodb_setup.sh" ]; then
+    export custom_mongodb_setup="true"
+    echo "${LBLUE}Custom MongoDB setup enabled.${WHITE}"
+fi
+
 echo -e "${LBLUE}Processing data from input YAML config file...${WHITE}"
 export android_app_ready=$(yq '.android_app_ready' $config_file_path)
 export app_run_on_vpn=$(yq '.app_run_on_vpn' $config_file_path)
@@ -34,7 +39,7 @@ export docker_access_token=$(yq '.docker_access_token' $config_file_path)
 export email=$(yq '.email' $config_file_path)
 #exporting host list as a string (so it can be exported as variable and read by other scripts)
 export host_list="$(yq '.hosts[]' $config_file_path)"
-
+export custom_mongodb_setup="true"
 export app_server_addr=$load_balancer_dns_name
 
 host_eth_ip_index=1
@@ -86,6 +91,7 @@ export load_balancer_dns_name=$load_balancer_dns_name
 export github_branch_name=$github_branch_name
 export docker_username=$docker_username
 export docker_access_token=$docker_access_token
+export custom_mongodb_setup=$custom_mongodb_setup
 export email=$email
 export BLACK="\033[0;30m"
 export DARK_GREY="\033[1;30m"

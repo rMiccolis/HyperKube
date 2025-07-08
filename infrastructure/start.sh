@@ -133,7 +133,6 @@ echo -e "${LGREEN}cert-manager installed ===> Operation Done!${WHITE}"
 . /home/$USER/HyperKube/bin/export_colors.sh
 
 export install_mongodb=$(yq ".install_mongodb // \"false\"" $config_file_path)
-export custom_mongodb_setup=$(yq ".custom_mongodb_setup // \"false\"" "$config_file_path")
 if [[ "$install_mongodb" == "true" ]]; then
   echo -e "${LGREEN}Installing MongoDB instance${WHITE}"
   ./HyperKube/bin/install_mongodb.sh
