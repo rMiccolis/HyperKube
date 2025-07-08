@@ -50,15 +50,16 @@ TO LET THIS SCRIPT WORK, YOU **MUST**:
 
 Input parameters:
 
-- [main_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml) (mandatory) => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application.
-- mongodb_values_file_path (optional) => This is the path to a mongodb_values.yaml configuration file for mongodb bitnami helm chart and MUST be called "mongodb_values.yaml". For usage see [MongoDB installation](#mongodb-installation) This is the yaml file to configure the chart. For info on how to fill this file see the [Bitnami Helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb). It must be provided if you want to use a custom values.yaml file to be provided to the Bitnami Helm chart.
-- [apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml) ([instructions](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md)) => This is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order).
+- `[main_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/main_config_example.yaml)`(mandatory) => This is the path to the configuration file and MUST be called "main_config.yaml". This is the yaml file to configure virtual machines and application.
+- `[apps_config_file_path](https://github.com/rMiccolis/HyperKube/blob/master/doc/apps_config.yaml) ([instructions](https://github.com/rMiccolis/HyperKube/blob/master/doc/app_config_instructions.md))` => This is the path to the configuration file and MUST be called "apps_config.yaml". This is the yaml file where to store variables to be substituted inside projects (kubernetes folder) yaml configuration files. Remember to use a name convention for yaml files inside root_project/kubernetes letting them start with an incremental id number (so they are executed with a order).
+- `mongodb_values_file_path` (optional) => This is the path to a mongodb_values.yaml configuration file for mongodb bitnami helm chart and MUST be called "mongodb_values.yaml". For usage see [MongoDB installation](#mongodb-installation) This is the yaml file to configure the chart. For info on how to fill this file see the [Bitnami Helm chart](https://artifacthub.io/packages/helm/bitnami/mongodb). It must be provided if you want to use a custom values.yaml file to be provided to the Bitnami Helm chart.
+- `[mongodb_setup_file_path]` (optional) => This is the path to a bash file that is executed right BEFORE the start of bitnami mongodb install. In this file you are able to perform all the actions needed to get the cluster (or the master VM) ready for bitnami mongodb helm install.
 
 ## MongoDB installation
 
 There are two methods to install it:
 
-1. With the default configuration:
+1. With the default configuration (you are free to skip "mongodb_values_file_path" parameter):
 
    ```yaml
    architecture: standalone
@@ -121,13 +122,6 @@ There are two methods to install it:
 
    ```powershell
    powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml" -mongodb_setup_file_path "E:\\path\to\mongodb_setup.sh"
-   ```
-
-   main_config.yaml:
-
-   ```yaml
-   install_mongodb: "true"
-   custom_mongodb_setup: "true"
    ```
 
 ### MongoDB tls connection
