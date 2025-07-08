@@ -14,7 +14,8 @@ export master_host_name=$(whoami)
 echo -e "${LBLUE}Setting Master host name ===> $master_host_name${WHITE}"
 sudo hostnamectl set-hostname $master_host_name
 
-if [ -s "/home/$USER/user_custom_scripts/mongodb_setup.sh" ]; then
+mongodb_setup=$(cat "/home/$USER/user_custom_scripts/mongodb_setup.sh")
+if [ -z "$mongodb_setup" ]; then
     export custom_mongodb_setup="true"
     echo -e "${LBLUE}Custom MongoDB setup enabled.${WHITE}"
 else
