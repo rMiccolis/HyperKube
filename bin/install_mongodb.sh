@@ -9,7 +9,6 @@ file_name=$1
 # Step 1: Extracts all variables in the format ${VAR} or $VAR from the file
 vars=$(grep -oP '\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}|\$([a-zA-Z_][a-zA-Z0-9_]*)' $file_name | sort -u)
 temp_vars=($vars)
-echo "variables found in $file_name: ${temp_vars[@]}"
 if [[ ${#temp_vars[@]} -gt 0 ]]; then
   # echo "variables to be substituted: $vars"
 
@@ -73,7 +72,6 @@ chmod 777 /home/$USER/mongodb_values.yaml
 # use the provided /home/$USER/mongodb_values.yaml to configure the bitnami mongodb helm chart
 # and substitute any environment variables
 envsubst_preserve_empty_variables "/home/$USER/mongodb_values.yaml"
-cat /home/$USER/mongodb_values.yaml
 echo "substituted variables in /home/$USER/mongodb_values.yaml: $(cat /home/$USER/mongodb_values.yaml)"
 helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb -n mongodb -f /home/$USER/mongodb_values.yaml
 
