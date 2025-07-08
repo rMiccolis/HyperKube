@@ -16,10 +16,10 @@ sudo hostnamectl set-hostname $master_host_name
 
 if [ -s "/home/$USER/user_custom_scripts/mongodb_setup.sh" ]; then
     export custom_mongodb_setup="true"
-    echo "${LBLUE}Custom MongoDB setup enabled.${WHITE}"
+    echo -e "${LBLUE}Custom MongoDB setup enabled.${WHITE}"
 else
     export custom_mongodb_setup="false"
-    echo "${LBLUE}Custom MongoDB setup disabled.${WHITE}"
+    echo -e "${LBLUE}Custom MongoDB setup disabled.${WHITE}"
 fi
 
 echo -e "${LBLUE}Processing data from input YAML config file...${WHITE}"
