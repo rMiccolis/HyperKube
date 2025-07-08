@@ -89,6 +89,8 @@ There are two methods to install it:
 
    ```yaml
    install_mongodb: "true"
+   mongo_root_username: "your_mongodb_username"
+   mongo_root_password: "your_mongodb_password"
    ```
 
 2. With a custom mongodb_values.yaml
