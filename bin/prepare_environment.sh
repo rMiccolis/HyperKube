@@ -43,7 +43,6 @@ export docker_access_token=$(yq '.docker_access_token' $config_file_path)
 export email=$(yq '.email' $config_file_path)
 #exporting host list as a string (so it can be exported as variable and read by other scripts)
 export host_list="$(yq '.hosts[]' $config_file_path)"
-export custom_mongodb_setup="true"
 export app_server_addr=$load_balancer_dns_name
 
 host_eth_ip_index=1
