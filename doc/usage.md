@@ -124,7 +124,7 @@ There are two methods to install it:
    powershell.exe -noprofile -executionpolicy bypass -file "E:\path\to\generate_hyperv_vms.ps1" -main_config_file_path "E:\\path\to\main_config.yaml" -apps_config_file_path "E:\\path\to\apps_config.yaml" -mongodb_values_file_path "E:\\path\to\mongodb_values.yaml" -mongodb_setup_file_path "E:\\path\to\mongodb_setup.sh"
    ```
 
-   **Note that Without providing the script "mongodb_setup_file_path", files inside ./kubernetes/mongodb will be applied to the kubernetes cluster. In order to avoid their application, you must submit the "mongodb_setup_file_path"**
+   **Note that Without providing the script "mongodb_setup_file_path", files inside ./kubernetes/mongodb will be applied to the kubernetes cluster. In order to avoid their application, you must submit the "mongodb_setup_file_path". Script will still use mongodb_values.yaml (default or provided by user)**
 
 ### MongoDB tls connection
 
