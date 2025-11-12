@@ -45,6 +45,7 @@ export mongo_root_password=$(yq '.mongo_root_password' $config_file_path)
 
 # open 27017 port for mongodb on nginx
 helm upgrade ingress-nginx ingress-nginx/ingress-nginx -n ingress-nginx --set tcp.27017="mongodb/mongodb:27017" --set controller.progressDeadlineSeconds=120
+echo -e "${LPURPLE}waiting for opening port on ingress-nginx${WHITE}"
 kubectl wait --for=condition=Ready --all pods --all-namespaces --timeout=3000s &
 wait
 
